@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 @RestController
@@ -32,18 +33,22 @@ public class getDataController {
     }
 
     private BusinessReport generateDummyBusiness(Date reportingDate) {
-        BusinessReport dummyBusinessReport = new BusinessReport();
-        dummyBusinessReport.date = reportingDate;
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("Seattle"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("LA"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("San Fran"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("New York"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("Paris"));
+        BusinessReport dummyBusinessReport = new BusinessReport(reportingDate);
 
+//        dummyBusinessReport.locations.add(getDummyBusinessLocation("Seattle"));
+//        dummyBusinessReport.locations.add(getDummyBusinessLocation("LA"));
+//        dummyBusinessReport.locations.add(getDummyBusinessLocation("San Fran"));
+//        dummyBusinessReport.locations.add(getDummyBusinessLocation("New York"));
+//        dummyBusinessReport.locations.add(getDummyBusinessLocation("Paris"));
+//
         return dummyBusinessReport;
+
     }
 
     private BusinessLocation getDummyBusinessLocation(String locationName)  {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+
         BusinessLocation dummyLocation = new BusinessLocation();
         dummyLocation.name = locationName;
         dummyLocation.budget = randomDouble(0.00, 10000.00);

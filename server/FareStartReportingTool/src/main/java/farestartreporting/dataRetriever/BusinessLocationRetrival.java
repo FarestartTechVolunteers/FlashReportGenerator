@@ -7,7 +7,10 @@ import java.util.List;
 
 public class BusinessLocationRetrival {
 
-    public List<BusinessLocation> getReport(int locationGroupID, String dateOfBusiness){
-        return new ArrayList<>();
+    public BusinessLocation getReport(int locationGroupID, String dateOfBusiness){
+
+        double d = 10.10;
+        long l = 1;
+        return new BusinessLocation("fake name", d, d, l, l);
     }
 }
