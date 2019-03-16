@@ -12,8 +12,6 @@ public class BusinessLocationRetrival {
 
     public BusinessLocation getReport(int locationGroupID, String dateOfBusiness) throws IOException {
 
-        double d = 10.10;
-        long l = 1;
 
         BusinessLocation businessLocationData = httpClient.getBusinessLocationData(locationGroupID, dateOfBusiness);
         return businessLocationData;
