@@ -16,15 +16,15 @@ import java.util.Date;
 @RestController
 public class getDataController {
 
-    @RequestMapping( value = "/getData", method = RequestMethod.GET, produces = "application/json")
-    public BusinessResponse getData() {
+    @RequestMapping(value = "/getData", method = RequestMethod.GET, produces = "application/json")
+    public BusinessResponse getData(@RequestBody GetDataInputPayload inputPayload) {
 
         Date startDate = inputPayload.startDate;
         Date endDate = inputPayload.endDate;
 
         assert(endDate.compareTo(startDate) > 0);
 
-        Date currentDate = startDate;
+        Date currentDate = startDate;   
 
         ArrayList<BusinessReport> businessReports = new ArrayList<BusinessReport>();
 
