@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import moment from "moment";
+import Nav from "./Layout/Nav";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import DatePicker from "./Components/DatePicker";
 import DataTable from "./Components/DataTable";
 import fetchDataForDays from "./data-fetcher";
+import ChartView from "./Components/ChartView";
+import CompanyChart from "./Components/CompanyChart";
 
-import 'tachyons/css/tachyons.css'
+import "tachyons/css/tachyons.css";
 
 class App extends Component {
   state = {
@@ -27,7 +31,10 @@ class App extends Component {
     const { activeWeek, dataForWeek } = this.state;
 
     return (
-      <div className='sans-serif'>
+      <div className="sans-serif">
+        <Router>
+          <Nav />
+        </Router>
         <DatePicker
           activeWeek={activeWeek}
           handleSetWeek={this.handleSetWeek}
@@ -38,7 +45,9 @@ class App extends Component {
             {moment(activeWeek[6]).format("LL")}
           </div>
         )}
-        <DataTable locations={dataForWeek.locations} />
+        <DataTable data={dataForWeek.locations} />
+        <ChartView data={dataForWeek} />
+        <CompanyChart data={dataForWeek} />
       </div>
     );
   }
