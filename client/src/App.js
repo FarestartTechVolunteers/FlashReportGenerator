@@ -29,12 +29,14 @@ class App extends Component {
 
   render() {
     const { activeWeek, dataForWeek } = this.state;
+    const { locations } = dataForWeek
 
     return (
       <div className="sans-serif">
-        <Router>
-          <Nav />
-        </Router>
+        {/* <Router>
+            <Nav />
+            </Router> */}
+
         <DatePicker
           activeWeek={activeWeek}
           handleSetWeek={this.handleSetWeek}
@@ -45,7 +47,7 @@ class App extends Component {
             {moment(activeWeek[6]).format("LL")}
           </div>
         )}
-        <DataTable data={dataForWeek.locations} />
+        <DataTable locations={locations} />
         <ChartView data={dataForWeek} />
         <CompanyChart data={dataForWeek} />
       </div>

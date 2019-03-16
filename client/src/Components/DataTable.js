@@ -77,7 +77,7 @@ const DataTable = ({ locations=[] }) => {
           <React.Fragment key={index}>
             <tr key={index+'-1'} className='striped--light-gray'>
               <td className='b pa2'>{location.name}</td>
-              <td pa2>Net sales</td>
+              <td className='pa2 b'>Net sales</td>
               {thisWeekDays(location).map((day, index) => (
                 <td key={index} className='pa2'>{round(day.netSales, 2)}</td>
               ))}
@@ -99,7 +99,7 @@ const DataTable = ({ locations=[] }) => {
             </tr>
             <tr key={index+'-3'} className='striped--light-gray'>
               <td className='bg-white pa2'></td>
-              <td className='pa2'>Count</td>
+              <td className='pa2 b'>Count</td>
               {thisWeekDays(location).map((day, index) => (
                 <td key={index} className='pa2'>{round(day.guestCount || day.checkCount, 2)}</td>
               ))}
