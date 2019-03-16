@@ -61,7 +61,7 @@ const DataTable = ({ locations=[] }) => {
     <table>
       <thead>
         <tr>
-          <td className='pv2 ph3'>Week of 3/11/2019</td>
+          <td className='pv2 ph3'>{/*Week of 3/11/2019*/}</td>
           <td></td>
           <td className='pa2'>Monday</td>
           <td className='pa2'>Tuesday</td>
