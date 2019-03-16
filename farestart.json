@@ -1,0 +1,274 @@
+{
+ "data": [{
+     "date": "2/25/2019",
+     "locations": [{
+         "name": "Maslows",
+         "netSales": 3996,
+         "budget": null,
+         "guestCount": 147,
+         "checkCount": 0
+       },
+       {
+         "name": "Rise",
+         "netSales": 1284,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 334
+       },
+       {
+         "name": "2100 Café",
+         "netSales":  565,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 121
+       },
+       {
+         "name": "PT Café",
+         "netSales":  979,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount":  213
+       },
+       {
+         "name": "Catering",
+         "netSales": 4644,
+         "budget": 10660,
+         "guestCount": 0,
+         "checkCount": 0 
+       },
+       {
+         "name": "FS Restaurant",
+         "netSales": 2152,
+         "budget": null,
+         "guestCount": 109,
+         "checkCount": 0 
+       },
+       {
+         "name": "Guest Chef Night",
+         "netSales": 0,
+         "budget": 0,
+         "guestCount": 0,
+         "checkCount": 0 
+       },
+       {
+         "name": "Community Meals",
+         "netSales": 2813,
+         "budget": 2432,
+         "guestCount": 0,
+         "checkCount": 0 
+       },
+       {
+         "name": "School Meals",
+         "netSales": 9860,
+         "budget": 5750,
+         "guestCount": 0,
+         "checkCount": 0 
+       }
+
+     ],
+
+    "date": "2/26/2019", 
+    "locations": [{
+         "name": "Maslows",
+         "netSales": 4011,
+         "budget": null,
+         "guestCount":  195,
+         "checkCount": 0
+       },
+       {
+         "name": "Rise",
+         "netSales": 1467,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 379
+       },
+       {
+         "name": "2100 Café",
+         "netSales": 581,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 109
+       },
+       {
+         "name": "PT Café",
+         "netSales": 1302,
+         "budget": null,
+         "guestCount": ,
+         "checkCount": 
+       },
+       {
+         "name": "Catering",
+         "netSales": 9601,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "FS Restaurant",
+         "netSales": 2157,
+         "budget": null,
+         "guestCount": 128,
+         "checkCount": 0
+       },
+       {
+         "name": "Guest Chef Night",
+         "netSales": 0,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "Community Meals",
+         "netSales": 2722,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount":0 
+       },
+       {
+         "name": "School Meals",
+         "netSales": 9531,
+         "budget": 5750,
+         "guestCount": 0,
+         "checkCount": 0
+       }
+     ], 
+
+    "date": "2/27/2019", 
+    "locations": [{
+         "name": "Maslows",
+         "netSales": 6318,
+         "budget": null,
+         "guestCount": 273,
+         "checkCount": 0
+       },
+       {
+         "name": "Rise",
+         "netSales": 1482,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 375 
+       },
+       {
+         "name": "2100 Café",
+         "netSales": 737,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 135
+       },
+       {
+         "name": "PT Café",
+         "netSales": 1330,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 235
+       },
+       {
+         "name": "Catering",
+         "netSales": 12189,
+         "budget": 10660,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "FS Restaurant",
+         "netSales": 1958,
+         "budget": null,
+         "guestCount": 102,
+         "checkCount": 0
+       },
+       {
+         "name": "Guest Chef Night",
+         "netSales": 0,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "Community Meals",
+         "netSales": 2829,
+         "budget": 2637,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "School Meals",
+         "netSales": 9776,
+         "budget": 5750,
+         "guestCount": 0,
+         "checkCount": 0
+       }
+      
+     ], 
+
+    "date": "2/28/2019", 
+    "locations": [{
+         "name": "Maslows",
+         "netSales": 5649,
+         "budget": null,
+         "guestCount": 244,
+         "checkCount": 0
+       },
+       {
+         "name": "Rise",
+         "netSales": 1485,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 339
+       },
+       {
+         "name": "2100 Café",
+         "netSales": 615,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 123
+       },
+       {
+         "name": "PT Café",
+         "netSales": 1413,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 278
+       },
+       {
+         "name": "Catering",
+         "netSales": 18259,
+         "budget": 10660,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "FS Restaurant",
+         "netSales": 2598,
+         "budget": null,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "Guest Chef Night",
+         "netSales": 6448,
+         "budget": 4745,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "Community Meals",
+         "netSales": 2495,
+         "budget": 2303,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       {
+         "name": "School Meals",
+         "netSales": 9877,
+         "budget": 5750,
+         "guestCount": 0,
+         "checkCount": 0
+       },
+       
+       
+      
+     ]
+
+   }
+ ]
+}
