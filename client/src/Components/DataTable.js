@@ -1,4 +1,5 @@
 import React from 'react'
+import round from 'lodash/round'
 
 const bothWeekDays = (location) => {
   const firstHalf = location.days.slice(0, location.days.length / 2)
@@ -60,59 +61,61 @@ const DataTable = ({ locations=[] }) => {
     <table>
       <thead>
         <tr>
-          <td>Week of 3/11/2019</td>
+          <td className='pv2 ph3'>Week of 3/11/2019</td>
           <td></td>
-          <td>Monday</td>
-          <td>Tuesday</td>
-          <td>Wednesday</td>
-          <td>Thursday</td>
-          <td>Friday</td>
-          <td>Saturday</td>
-          <td>Sunday</td>
+          <td className='pa2'>Monday</td>
+          <td className='pa2'>Tuesday</td>
+          <td className='pa2'>Wednesday</td>
+          <td className='pa2'>Thursday</td>
+          <td className='pa2'>Friday</td>
+          <td className='pa2'>Saturday</td>
+          <td className='pa2'>Sunday</td>
         </tr>
       </thead>
       <tbody>
         {locations.map((location, index) => (
           <React.Fragment key={index}>
             <tr key={index+'-1'} className='striped--light-gray'>
-              <td className='b'>{location.name}</td>
-              <td>Net sales</td>
+              <td className='b pa2'>{location.name}</td>
+              <td pa2>Net sales</td>
               {thisWeekDays(location).map((day, index) => (
-                <td key={index}>{day.netSales}</td>
+                <td key={index} className='pa2'>{round(day.netSales, 2)}</td>
               ))}
             </tr>
             <tr key={index+'-2'}>
               <td></td>
-              <td>vs LW</td>
+              <td className='pa2'>vs LW</td>
               {thisWeekDays(location).map((day, index) => {
                 const lastNetSales = lastWeekDays(location)[index].netSales
+
                 if (day.netSales && lastNetSales) {
                   const change = day.netSales - lastNetSales
                   const hue = change > 0 ? 'bg-light-green' : 'bg-washed-red'
-                  return <td key={index} className={hue}>{change}</td>
+                  return <td key={index} className={`${hue} pa2`}>{round(change, 2)}</td>
                 } else {
                   return <td key={index} />
                 }
               })}
             </tr>
             <tr key={index+'-3'} className='striped--light-gray'>
-              <td className='bg-white'></td>
-              <td>Count</td>
+              <td className='bg-white pa2'></td>
+              <td className='pa2'>Count</td>
               {thisWeekDays(location).map((day, index) => (
-                <td key={index}>{day.guestCount || day.checkCount}</td>
+                <td key={index} className='pa2'>{round(day.guestCount || day.checkCount, 2)}</td>
               ))}
             </tr>
             <tr key={index+'-4'}>
               <td></td>
-              <td>vs LW</td>
+              <td className='pa2'>vs LW</td>
               {thisWeekDays(location).map((day, index) => {
                 const countKey = 'guestCount' // or checkCount
                 const count = day[countKey]
                 const lastCount = (lastWeekDays(location)[index] || [])[countKey]
+
                 if (count && lastCount) {
                   const change = count - lastCount
                   const hue = change > 0 ? 'bg-light-green' : 'bg-washed-red'
-                  return <td key={index} className={hue}>{change}</td>
+                  return <td key={index} className={`${hue} pa2`}>{round(change, 2)}</td>
                 } else {
                   return <td key={index} />
                 }

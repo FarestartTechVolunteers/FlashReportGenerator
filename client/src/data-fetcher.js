@@ -1,4 +1,5 @@
 import moment from "moment";
+import axios from 'axios'
 
 const stubResponse = {
   // weeks start on monday
@@ -140,8 +141,11 @@ const transform = response => {
 };
 
 async function fetchDataForDays(days) {
-  const res = transform(stubResponse);
-  return res;
+  const res = await axios.post('http://172.16.10.48:8080/getData', {
+    startDate: '2012-01-01T00:00:00.511Z',
+    endDate: '2012-01-15T00:00:00.511Z',
+  })
+  return transform(res.data);
 }
 
 export default fetchDataForDays;
