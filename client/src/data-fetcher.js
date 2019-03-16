@@ -141,7 +141,7 @@ const transform = response => {
 };
 
 async function fetchDataForDays(days) {
-  const res = await axios.post('http://172.16.10.48:8080/getData', {
+  const res = await axios.post('/getData', {
     startDate: '2012-01-01T00:00:00.511Z',
     endDate: '2012-01-15T00:00:00.511Z',
   })
