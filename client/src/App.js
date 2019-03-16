@@ -4,15 +4,17 @@ import Nav from "./Layout/Nav";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import DatePicker from "./Components/DatePicker";
-import DataTable from "./Components/Table";
+import DataTable from "./Components/DataTable";
 import fetchDataForDays from "./data-fetcher";
 import ChartView from "./Components/ChartView";
 import CompanyChart from "./Components/CompanyChart";
 
+import "tachyons/css/tachyons.css";
+
 class App extends Component {
   state = {
     activeWeek: [], // 7 date objects
-    dataForWeek: []
+    dataForWeek: {}
   };
 
   handleSetWeek = async week => {
@@ -23,18 +25,16 @@ class App extends Component {
     const dataForWeek = await fetchDataForDays(week);
 
     this.setState({ dataForWeek });
-    // TODO: trigger a fetch for data
   };
 
   render() {
     const { activeWeek, dataForWeek } = this.state;
 
     return (
-      <div>
+      <div className="sans-serif">
         <Router>
           <Nav />
         </Router>
-
         <DatePicker
           activeWeek={activeWeek}
           handleSetWeek={this.handleSetWeek}
@@ -45,7 +45,7 @@ class App extends Component {
             {moment(activeWeek[6]).format("LL")}
           </div>
         )}
-        <DataTable data={dataForWeek} />
+        <DataTable data={dataForWeek.locations} />
         <ChartView data={dataForWeek} />
         <CompanyChart data={dataForWeek} />
       </div>
