@@ -114,9 +114,23 @@ const stubResponse = {
 };
 
 const transform = response => {
+  let locations = {}
+  response.data.forEach((day) => {
+    day.locations.forEach((loc) => {
+      const { name } = loc
+      locations[name] = {
+        name: name,
+        days: ((locations[name] || {}).days || []).concat({
+          ...loc,
+          date: moment(day.date).toDate()
+        })
+      }
+    }, {})
+  }, [])
+
   return {
+    locations: Object.keys(locations).reduce((acc, k) => [...acc, locations[k]], []),
     data: response.data.map(item => {
-      console.log(item.date, moment(item.date).toDate());
       return {
         ...item,
         date: moment(item.date).toDate()
