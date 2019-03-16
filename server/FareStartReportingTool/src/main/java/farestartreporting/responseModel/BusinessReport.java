@@ -9,12 +9,31 @@ import java.util.List;
 public class BusinessReport {
     public Date date;
     public List<BusinessLocation> locations;
-    public BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
+
+    private BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
+
+    public BusinessReport(Date date, List<BusinessLocation> locations) {
+        this.date = date;
+        this.locations = locations;
+    }
 
 
-    public BusinessReport() {
+    public BusinessReport(Date date) {
 
         String encodedDate = "16%20Mar%202019%2019%3A52%3A00%20GMT";
-        locations = retreiver.getReport(1, encodedDate);
+
+        List<BusinessLocation> locations = new ArrayList<>();
+
+        BusinessLocation report1 = retreiver.getReport(1, encodedDate);
+        BusinessLocation report2 = retreiver.getReport(2, encodedDate);
+
+        locations.add(report1);
+        locations.add(report2);
+        this.date = date;
+        this.locations = locations;
+
+    }
+
+    public BusinessReport(String date, List<BusinessLocation> locations) {
     }
 }
