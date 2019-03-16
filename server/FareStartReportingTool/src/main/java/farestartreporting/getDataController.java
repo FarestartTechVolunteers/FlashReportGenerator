@@ -4,10 +4,7 @@ import farestartreporting.responseModel.BusinessLocation;
 import farestartreporting.responseModel.BusinessResponse;
 import farestartreporting.responseModel.BusinessReport;
 import farestartreporting.responseModel.GetDataInputPayload;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +12,8 @@ import java.util.Date;
 @RestController
 public class getDataController {
 
-    @RequestMapping( value = "/getData", method = RequestMethod.GET, produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping( value = "/getData", method = RequestMethod.POST, produces = "application/json")
     public BusinessResponse getData(@RequestBody GetDataInputPayload inputPayload) {
 
         Date startDate = inputPayload.startDate;
@@ -45,11 +43,11 @@ public class getDataController {
     private BusinessReport generateDummyBusiness(Date reportingDate) {
         BusinessReport dummyBusinessReport = new BusinessReport();
         dummyBusinessReport.date = reportingDate;
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("Seattle"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("LA"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("San Fran"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("New York"));
-        dummyBusinessReport.locations.add(getDummyBusinessLocation("Paris"));
+        dummyBusinessReport.locations.add(getDummyBusinessLocation("Catering"));
+        dummyBusinessReport.locations.add(getDummyBusinessLocation("FS Restaurant"));
+        dummyBusinessReport.locations.add(getDummyBusinessLocation("Guest Chef Night"));
+        dummyBusinessReport.locations.add(getDummyBusinessLocation("2100 Cafe"));
+        dummyBusinessReport.locations.add(getDummyBusinessLocation("Maslow's"));
 
         return dummyBusinessReport;
     }
