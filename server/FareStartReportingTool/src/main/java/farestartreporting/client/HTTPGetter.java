@@ -17,16 +17,6 @@ public class HTTPGetter {
     public static final String USER_ID = "128537";
 
 
-//    //TODO: don't use this main when demoing
-//    public static void main(String[] args) throws IOException {
-//
-////        getKeyMetrics();
-////        getLocationGroups();
-//        String encodedDateString = "16%20Mar%202019%2019%3A52%3A00%20GMT";
-//
-//        getBusinessLocationData(2, encodedDateString);
-//    }
-
     public static BusinessLocation getBusinessLocationData(int locationGroupID, String dateOfBusiness) throws IOException {
         /**
          *    {
@@ -44,8 +34,8 @@ public class HTTPGetter {
          */
 
 
-//        String urlVariable = "https://api.ctuit.com/api/KeyInfo/2/16%20Mar%202019%2019%3A52%3A00%20GMT/1";
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
+
         URL url = new URL(urlVariable);
 
 

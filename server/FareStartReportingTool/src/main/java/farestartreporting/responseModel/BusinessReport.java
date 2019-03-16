@@ -1,6 +1,7 @@
 package farestartreporting.responseModel;
 
 import farestartreporting.dataRetriever.BusinessLocationRetrival;
+import farestartreporting.utils.URLEncoderHelperFS;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class BusinessReport {
 
     public BusinessReport(Date date) throws IOException {
 
-        String encodedDate = "16%20Mar%202019%2019%3A52%3A00%20GMT";
+        String encodedDate = URLEncoderHelperFS.convertURL(date);
 
         List<BusinessLocation> locations = new ArrayList<>();
 
