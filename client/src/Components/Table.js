@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import table from "table";
 
 class Table extends Component {
   render() {
-    return <h1>This is a table</h1>;
+    return <div>table</div>;
   }
 }
 

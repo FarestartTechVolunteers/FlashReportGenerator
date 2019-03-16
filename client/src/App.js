@@ -3,20 +3,22 @@ import moment from "moment";
 
 import DatePicker from "./Components/DatePicker";
 import DataTable from "./Components/Table";
+import fetchDataForDays from "./data-fetcher";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      activeWeek: [], // 7 date objects
-      dataForWeek: []
-    };
-  }
+  state = {
+    activeWeek: [], // 7 date objects
+    dataForWeek: []
+  };
 
-  handleSetWeek = week => {
+  handleSetWeek = async week => {
     this.setState({
       activeWeek: week
     });
+
+    const dataForWeek = await fetchDataForDays(week);
+
+    this.setState({ dataForWeek });
 
     // TODO: trigger a fetch for data
   };
