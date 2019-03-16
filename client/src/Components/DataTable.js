@@ -97,7 +97,7 @@ const DataTable = ({ locations=[] }) => {
                 }
               })}
             </tr>
-            <tr key={index+'-3'} className='striped--light-gray'>
+            <tr key={index+'-3'}>
               <td className='bg-white pa2'></td>
               <td className='pa2 b'>Count</td>
               {thisWeekDays(location).map((day, index) => (

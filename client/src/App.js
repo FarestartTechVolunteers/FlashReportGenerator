@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import Nav from "./Layout/Nav";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import isEmpty from 'lodash/isEmpty'
 
 import DatePicker from "./Components/DatePicker";
 import DataTable from "./Components/DataTable";
@@ -33,23 +34,33 @@ class App extends Component {
 
     return (
       <div className="sans-serif">
-        {/* <Router>
-            <Nav />
-            </Router> */}
+        <div className='flex flex-row'>
+          <div className='flex-0'>
+            {/* <Router>
+                <Nav />
+                </Router> */}
 
-        <DatePicker
-          activeWeek={activeWeek}
-          handleSetWeek={this.handleSetWeek}
-        />
-        {activeWeek.length === 7 && (
-          <div>
-            {moment(activeWeek[0]).format("LL")} –{" "}
-            {moment(activeWeek[6]).format("LL")}
+            <DatePicker
+            activeWeek={activeWeek}
+            handleSetWeek={this.handleSetWeek}
+            />
           </div>
-        )}
-        <DataTable locations={locations} />
-        <ChartView data={dataForWeek} />
-        <CompanyChart data={dataForWeek} />
+          <div className='flex-1 ml4'>
+            {activeWeek.length === 7 && (
+            <h1>
+                {moment(activeWeek[0]).format("LL")} –{" "}
+                {moment(activeWeek[6]).format("LL")}
+            </h1>
+            )}
+            {!isEmpty(dataForWeek) && (
+              <React.Fragment>
+            <DataTable locations={locations} />
+            <ChartView data={dataForWeek} />
+            <CompanyChart data={dataForWeek} />
+              </React.Fragment>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
