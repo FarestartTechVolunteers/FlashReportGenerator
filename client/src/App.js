@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import moment from "moment";
+import Nav from "./Layout/Nav";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import DatePicker from "./Components/DatePicker";
 import DataTable from "./Components/Table";
 import fetchDataForDays from "./data-fetcher";
+import ChartView from "./Components/ChartView";
+import CompanyChart from "./Components/CompanyChart";
 
 class App extends Component {
   state = {
@@ -19,7 +23,6 @@ class App extends Component {
     const dataForWeek = await fetchDataForDays(week);
 
     this.setState({ dataForWeek });
-
     // TODO: trigger a fetch for data
   };
 
@@ -28,6 +31,10 @@ class App extends Component {
 
     return (
       <div>
+        <Router>
+          <Nav />
+        </Router>
+
         <DatePicker
           activeWeek={activeWeek}
           handleSetWeek={this.handleSetWeek}
@@ -39,6 +46,8 @@ class App extends Component {
           </div>
         )}
         <DataTable data={dataForWeek} />
+        <ChartView data={dataForWeek} />
+        <CompanyChart data={dataForWeek} />
       </div>
     );
   }
