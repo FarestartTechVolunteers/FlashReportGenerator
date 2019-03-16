@@ -20,10 +20,21 @@ public class getDataController {
 
         Date startDate = inputPayload.startDate;
         Date endDate = inputPayload.endDate;
-        
+
+        assert(endDate.compareTo(startDate) > 0);
+
+        Date currentDate = startDate;
+
 
         ArrayList<BusinessReport> businessReports = new ArrayList<BusinessReport>();
-        businessReports.add(generateDummyBusiness(new Date()));
+
+        while (endDate.compareTo(currentDate) > 0) {
+            currentDate.setTime(currentDate.getTime() + 86400000);
+
+            Date recordedDate = new Date();
+            recordedDate.setTime(currentDate.getTime());
+            businessReports.add(generateDummyBusiness(recordedDate));
+        }
 
         BusinessResponse businessResponse = new BusinessResponse();
         businessResponse.data = businessReports;
