@@ -16,10 +16,10 @@ import java.util.Date;
 public class getDataController {
 
     @RequestMapping( value = "/getData", method = RequestMethod.GET, produces = "application/json")
-    public BusinessResponse getData(@RequestBody GetDataInputPayload inputPayload) {
+    public BusinessResponse getData() {
 
-        Date startDate = inputPayload.startDate;
-        Date endDate = inputPayload.endDate;
+//        Date startDate = inputPayload.startDate;
+//        Date endDate = inputPayload.endDate;
         
 
         ArrayList<BusinessReport> businessReports = new ArrayList<BusinessReport>();
