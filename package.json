@@ -1,0 +1,22 @@
+{
+  "name": "flashreportgenerator",
+  "version": "1.0.0",
+  "description": "Farestart Flash Report Generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FarestartTechVolunteers/FlashReportGenerator.git"
+  },
+  "keywords": [
+    "testkey"
+  ],
+  "author": "techvolunteers@farestart",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FarestartTechVolunteers/FlashReportGenerator/issues"
+  },
+  "homepage": "https://github.com/FarestartTechVolunteers/FlashReportGenerator#readme"
+}
