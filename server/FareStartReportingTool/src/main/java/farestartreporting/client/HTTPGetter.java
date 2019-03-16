@@ -1,24 +1,15 @@
 package farestartreporting.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Map;
-
+import farestartreporting.responseModel.BusinessLocation;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Map;
+import java.util.Random;
 
 public class HTTPGetter {
 
@@ -26,17 +17,17 @@ public class HTTPGetter {
     public static final String USER_ID = "128537";
 
 
-    //TODO: don't use this main when demoing
-    public static void main(String[] args) throws IOException {
+//    //TODO: don't use this main when demoing
+//    public static void main(String[] args) throws IOException {
+//
+////        getKeyMetrics();
+////        getLocationGroups();
+//        String encodedDateString = "16%20Mar%202019%2019%3A52%3A00%20GMT";
+//
+//        getBusinessLocationData(2, encodedDateString);
+//    }
 
-//        getKeyMetrics();
-//        getLocationGroups();
-        getReportForMaslow();
-
-    }
-
-    private static void getReportForMaslow() throws IOException {
-
+    public static BusinessLocation getBusinessLocationData(int locationGroupID, String dateOfBusiness) throws IOException {
         /**
          *    {
          "depth": 2,
@@ -52,7 +43,9 @@ public class HTTPGetter {
          },
          */
 
-        String urlVariable = "https://api.ctuit.com/api/KeyInfo/2/16%20Mar%202019%2019%3A52%3A00%20GMT/1";
+
+//        String urlVariable = "https://api.ctuit.com/api/KeyInfo/2/16%20Mar%202019%2019%3A52%3A00%20GMT/1";
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
         URL url = new URL(urlVariable);
 
 
@@ -74,25 +67,27 @@ public class HTTPGetter {
         }
         in.close();
 
-        System.out.println(content.toString());
-    }
 
-    public static class ParameterStringBuilder {
-        public static String getParamsString(Map<String, String> params)
-                throws UnsupportedEncodingException {
-            StringBuilder result = new StringBuilder();
+        JSONObject json = new JSONObject(content.toString());
+        JSONArray results = json.getJSONArray("results");
 
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-                result.append("&");
-            }
+        JSONObject curSales = (JSONObject) results.get(0); // assume the zero
+        JSONObject currentDOB = (JSONObject) curSales.get("current");
+        String currentSales = (String) currentDOB.get("value"); //DOB
 
-            String resultString = result.toString();
-            return resultString.length() > 0
-                    ? resultString.substring(0, resultString.length() - 1)
-                    : resultString;
-        }
+        double netSales = Double.parseDouble(currentSales.replaceAll("[^\\d.]", "0"));
+
+        JSONObject rez = (JSONObject) results.get(3); // assume the third
+        JSONObject currentBDOB = (JSONObject) rez.get("current");
+        String currentBudget = (String) currentBDOB.get("value"); //BDOB
+        double salesBudget = Double.parseDouble(currentBudget.replaceAll("[^\\d.]", "0"));
+
+        Random rand = new Random();
+        long n = rand.nextInt(10);
+
+        System.out.println("Getting the real netSales " + netSales);
+        System.out.println("Getting the real sales budget " + salesBudget);
+
+        return new BusinessLocation("Maslows", netSales, salesBudget, n, n);
     }
 }

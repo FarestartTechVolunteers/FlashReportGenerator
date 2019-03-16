@@ -2,6 +2,7 @@ package farestartreporting.responseModel;
 
 import farestartreporting.dataRetriever.BusinessLocationRetrival;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ public class BusinessReport {
     }
 
 
-    public BusinessReport(Date date) {
+    public BusinessReport(Date date) throws IOException {
 
         String encodedDate = "16%20Mar%202019%2019%3A52%3A00%20GMT";
 
@@ -34,6 +35,5 @@ public class BusinessReport {
 
     }
 
-    public BusinessReport(String date, List<BusinessLocation> locations) {
-    }
+
 }

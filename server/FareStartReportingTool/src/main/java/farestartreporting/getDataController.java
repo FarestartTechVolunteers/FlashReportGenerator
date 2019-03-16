@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,13 +18,13 @@ import java.util.Date;
 public class getDataController {
 
     @RequestMapping( value = "/getData", method = RequestMethod.GET, produces = "application/json")
-    public BusinessResponse getData() {
+    public BusinessResponse getData() throws IOException {
 
 //        Date startDate = inputPayload.startDate;
 //        Date endDate = inputPayload.endDate;
         
 
-        ArrayList<BusinessReport> businessReports = new ArrayList<BusinessReport>();
+        ArrayList<BusinessReport> businessReports = new ArrayList<>();
         businessReports.add(generateDummyBusiness(new Date()));
 
         BusinessResponse businessResponse = new BusinessResponse();
@@ -32,7 +33,7 @@ public class getDataController {
         return businessResponse;
     }
 
-    private BusinessReport generateDummyBusiness(Date reportingDate) {
+    private BusinessReport generateDummyBusiness(Date reportingDate) throws IOException {
         BusinessReport dummyBusinessReport = new BusinessReport(reportingDate);
 
 //        dummyBusinessReport.locations.add(getDummyBusinessLocation("Seattle"));
