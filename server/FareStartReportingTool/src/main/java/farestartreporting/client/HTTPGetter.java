@@ -1,6 +1,7 @@
 package farestartreporting.client;
 
 import farestartreporting.responseModel.BusinessLocation;
+import org.apache.logging.log4j.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,24 +18,19 @@ public class HTTPGetter {
     public static final String USER_ID = "128537";
 
 
-    public static BusinessLocation getBusinessLocationData(int locationGroupID, String dateOfBusiness) throws IOException {
-        /**
-         *    {
-         "depth": 2,
-         "description": "",
-         "isPrimary": true,
-         "locationGroupID": 6,
-         "locationGroupName": "Maslows",
-         "locationIDs": null,
-         "parentLocationGroupID": 1,
-         "sortOrder": 295,
-         "weatherZip": null,
-         "woeid": null
-         },
-         */
+    /*Period Dype
+     *  {
+     "id": 1,
+     "name": "Week",
+     "periodTypeID": 1,
+     "periodTypeName": "Week"
+     },
 
+     */
+    public static BusinessLocation getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
 
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
+
 
         URL url = new URL(urlVariable);
 
@@ -61,23 +57,30 @@ public class HTTPGetter {
         JSONObject json = new JSONObject(content.toString());
         JSONArray results = json.getJSONArray("results");
 
-        JSONObject curSales = (JSONObject) results.get(0); // assume the zero
-        JSONObject currentDOB = (JSONObject) curSales.get("current");
-        String currentSales = (String) currentDOB.get("value"); //DOB
+        JSONObject curSalesJSONObject = (JSONObject) results.get(0);
+        JSONObject currentDOB = (JSONObject) curSalesJSONObject.get("current");
+        String currentSales = (String) currentDOB.get("value"); //
 
-        double netSales = Double.parseDouble(currentSales.replaceAll("[^\\d.]", "0"));
+        String parsedCurrentSales = currentSales.replaceAll("[^\\d.]", "");
+        double netSales = Strings.isEmpty(parsedCurrentSales) ? 0.0 : Double.parseDouble(parsedCurrentSales);
 
-        JSONObject rez = (JSONObject) results.get(3); // assume the third
-        JSONObject currentBDOB = (JSONObject) rez.get("current");
-        String currentBudget = (String) currentBDOB.get("value"); //BDOB
-        double salesBudget = Double.parseDouble(currentBudget.replaceAll("[^\\d.]", "0"));
 
+        JSONObject budget = (JSONObject) curSalesJSONObject.get("projected"); // seems like this is the data they use for budget reporting
+        String budgetSales = (String) budget.get("value"); //
+        String parsedBudget = budgetSales.replaceAll("[^\\d.]", "");
+        double budgetedSales = Strings.isEmpty(parsedBudget) ? 0.0 : Double.parseDouble(parsedBudget);
+
+
+        // To rig the count
         Random rand = new Random();
         long n = rand.nextInt(10);
 
+        //Debugging:
+        System.out.println(urlVariable);
+        System.out.println("Getting the data for " + name);
         System.out.println("Getting the real netSales " + netSales);
-        System.out.println("Getting the real sales budget " + salesBudget);
+        System.out.println("Getting the real sales budget " + budgetedSales);
 
-        return new BusinessLocation("Maslows", netSales, salesBudget, n, n);
+        return new BusinessLocation(name, netSales, budgetedSales, n, n);
     }
 }
