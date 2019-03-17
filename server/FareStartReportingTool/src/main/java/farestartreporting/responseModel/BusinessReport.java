@@ -4,19 +4,33 @@ import farestartreporting.dataRetriever.BusinessLocationRetrival;
 import farestartreporting.utils.URLEncoderHelperFS;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class BusinessReport {
     public Date date;
     public List<BusinessLocation> locations;
+    //Name and location group ID
+    public Map<String, Integer> interestedInformation;
 
     private BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
 
-    public BusinessReport(Date date, List<BusinessLocation> locations) {
-        this.date = date;
-        this.locations = locations;
+    //In order of entry page for data verification
+    {
+        interestedInformation = new HashMap<>();
+        interestedInformation.put("700 VIRGINIA RETAIL ", 18);
+        interestedInformation.put("FS Restaurant", 4);
+        interestedInformation.put("FareStart Catering", 17);
+        interestedInformation.put("Guest Chef Night", 5);
+        interestedInformation.put("700 Commissary", 5);
+        interestedInformation.put("Maslows ", 6);
+        interestedInformation.put("CAFES", 19);
+        interestedInformation.put("Rise Coffee", 7);
+        interestedInformation.put("PT Café", 3);
+        interestedInformation.put("2100 Cafe", 2);
+        interestedInformation.put("CONTRACT OPERATIONS", 23);
+        interestedInformation.put("Community Meals", 16);
+        interestedInformation.put("School Meals", 15);
+        interestedInformation.put("Student+Staff Lunch", 26);
     }
 
 
@@ -26,11 +40,11 @@ public class BusinessReport {
 
         List<BusinessLocation> locations = new ArrayList<>();
 
-        BusinessLocation report1 = retreiver.getReport(1, encodedDate);
-        BusinessLocation report2 = retreiver.getReport(2, encodedDate);
+        for (String restaurantName : interestedInformation.keySet()) {
+            BusinessLocation report = retreiver.getReport(restaurantName, interestedInformation.get(restaurantName), encodedDate);
+            locations.add(report);
+        }
 
-        locations.add(report1);
-        locations.add(report2);
         this.date = date;
         this.locations = locations;
 

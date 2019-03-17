@@ -9,6 +9,10 @@ import java.net.URL;
 public class HTTPNonEssential {
     public static final String AUTH_TOKEN = "d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6";
     public static final String USER_ID = "128537";
+
+    public static void main(String[] args) {
+
+    }
     public static void getKeyMetrics() throws IOException {
         System.out.println("hello testing the client");
 
