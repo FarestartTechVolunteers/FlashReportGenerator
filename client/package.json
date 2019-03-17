@@ -1,0 +1,34 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "react": "^16.8.4",
+    "react-day-picker": "^7.3.0",
+    "react-dom": "^16.8.4",
+    "react-google-charts": "^3.0.11",
+    "react-router-dom": "^4.4.0",
+    "react-scripts": "2.1.8",
+    "table": "^5.2.3",
+    "tachyons": "^4.11.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "proxy": "http://172.16.10.48:8080"
+}
