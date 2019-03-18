@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class getDataController {
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws ParseException, IOException, ExecutionException, InterruptedException {
         System.out.println("hello");
         String startDate = "03-11-2019";
         //Todo change it to 7
@@ -35,7 +36,7 @@ public class getDataController {
     }
 
     @RequestMapping(value = "/api/getData", method = RequestMethod.GET, produces = "application/json")
-    public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException {
+    public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException, ExecutionException, InterruptedException {
 
         int dateRange = Integer.valueOf(range);
         if (dateRange < 0) {
@@ -50,7 +51,7 @@ public class getDataController {
         return getWeeklyHelper(startDate, dateRange);
     }
 
-    public static BusinessResponse getWeeklyHelper(String startDate, int dateRange) throws ParseException, IOException {
+    public static BusinessResponse getWeeklyHelper(String startDate, int dateRange) throws ParseException, IOException, ExecutionException, InterruptedException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
         Date dateToWorkWith = simpleDateFormat.parse(startDate);
         Calendar calendar = Calendar.getInstance();

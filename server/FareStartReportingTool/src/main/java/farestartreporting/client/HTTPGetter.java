@@ -2,6 +2,9 @@ package farestartreporting.client;
 
 import farestartreporting.responseModel.DailyData;
 import org.apache.logging.log4j.util.Strings;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.Dsl;
+import org.asynchttpclient.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,124 +13,109 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class HTTPGetter {
 
     public static final String AUTH_TOKEN = "d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6";
     public static final String USER_ID = "128537";
+    //    private AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config().setConnectionTtl(5000));
+    private static AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config());
+
+//    public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
+//        AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config().setConnectionTtl(100));
+//        String url1 = "https://api.ctuit.com/api/KeyInfo/6/03-11-2019/1";
+//        String url2 = "https://api.ctuit.com/api/KeyInfo/2/03-11-2019/1";
+//
+//        CompletableFuture<Response> r1 = asyncHttpClient.prepareGet(url1)
+//                .addHeader("Content-Type", "application/json")
+//                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+//                .addHeader("X-UserId", USER_ID)
+//                .execute().toCompletableFuture();
+//
+//        CompletableFuture<Response> r2 = asyncHttpClient.prepareGet(url2)
+//                .addHeader("Content-Type", "application/json")
+//                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+//                .addHeader("X-UserId", USER_ID)
+//                .execute().toCompletableFuture();
+//
+//        CompletableFuture.allOf(r1, r2).join();
+//        String responseBody1 = r1.get().getResponseBody();
+//        String responseBody2 = r2.get().getResponseBody();
+//
+//        System.out.println(responseBody1);
+//        System.out.println(responseBody2);
+//
+//        asyncHttpClient.close();
+//    }
 
 
-    /*Period Dype
-     *  {
-     "id": 1,
-     "name": "Week",
-     "periodTypeID": 1,
-     "periodTypeName": "Week"
-     },
-
-     */
-
-
-    public static String getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
+    public static CompletableFuture<Response> getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/8";
+        CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+                .addHeader("X-UserId", USER_ID)
+                .execute().toCompletableFuture();
 
-        URL url = new URL(urlVariable);
-
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("X-UserAuthToken", AUTH_TOKEN);
-        con.setRequestProperty("X-UserId", USER_ID);
-
-        int status = con.getResponseCode();
-        System.out.println(status);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return content.toString();
+        return response;
     }
 
-    public static String getGuestCount(int locationGroupID, String dateOfBusiness) throws IOException {
+    public static CompletableFuture<Response> getGuestCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/7";
 
-        URL url = new URL(urlVariable);
+        CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+                .addHeader("X-UserId", USER_ID)
+                .execute().toCompletableFuture();
 
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("X-UserAuthToken", AUTH_TOKEN);
-        con.setRequestProperty("X-UserId", USER_ID);
-
-        int status = con.getResponseCode();
-        System.out.println(status);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return content.toString();
+        return response;
     }
 
-    public static String netSalesData(int locationGroupID, String dateOfBusiness) throws IOException {
+    public static CompletableFuture<Response> getNetSalesData(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
 
-        URL url = new URL(urlVariable);
+        CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+                .addHeader("X-UserId", USER_ID)
+                .execute().toCompletableFuture();
 
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("X-UserAuthToken", AUTH_TOKEN);
-        con.setRequestProperty("X-UserId", USER_ID);
-
-        int status = con.getResponseCode();
-        System.out.println(status);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return content.toString();
+        return response;
     }
 
-    public static DailyData getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
+    public static DailyData getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException, ExecutionException, InterruptedException {
 
-        String netSalesDataString = netSalesData(locationGroupID, dateOfBusiness);
+        CompletableFuture<Response> r1 = getNetSalesData(locationGroupID, dateOfBusiness);
+        CompletableFuture<Response> r2 = getCheckCount(locationGroupID, dateOfBusiness);
+        CompletableFuture<Response> r3 = getGuestCount(locationGroupID, dateOfBusiness);
 
+        CompletableFuture.allOf(r1, r2, r3).join();
+
+        String netSalesDataString = r1.get().getResponseBody();
+        String checkCountRes = r2.get().getResponseBody();
+        String guestCountRes = r3.get().getResponseBody();
+
+        // Sales
         Double netSales = parseValueFieldName(netSalesDataString, "current");
 
         Double sameDayLastWeekSales = parseSameDayLWData(netSalesDataString);
 
+        // Budget
         Double budgetedSales = parseBudget(netSalesDataString);
 
         // Check Count
-
-        String checkCountRes = getCheckCount(locationGroupID, dateOfBusiness);
-
         Double checkCount = parseValueFieldName(checkCountRes, "current");
 
         Double sameDayLastWeekCheckCount = parseSameDayLWData(checkCountRes);
 
 
         // Guest Count
-        String guestCountRes = getGuestCount(6, dateOfBusiness);
-
         Double guestCount = parseValueFieldName(guestCountRes, "current");
 
         Double sameDayLastWeekGuestCount = parseSameDayLWData(guestCountRes);
