@@ -1,11 +1,8 @@
 package farestartreporting.responseModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BusinessResponse {
-    public ArrayList<BusinessReport> data;
-
-    public BusinessResponse() {
-        data = new ArrayList<BusinessReport>();
-    }
+    public List<BusinessReport> data;
 }

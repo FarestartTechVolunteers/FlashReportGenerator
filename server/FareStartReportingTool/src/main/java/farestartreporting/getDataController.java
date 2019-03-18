@@ -1,75 +1,56 @@
 package farestartreporting;
 
+import com.sun.tools.corba.se.idl.InvalidArgument;
 import farestartreporting.responseModel.BusinessLocation;
 import farestartreporting.responseModel.BusinessResponse;
 import farestartreporting.responseModel.BusinessReport;
 import farestartreporting.responseModel.GetDataInputPayload;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class getDataController {
 
-    @RequestMapping( value = "/getData", method = RequestMethod.GET, produces = "application/json")
-    public BusinessResponse getData() throws IOException {
+    @RequestMapping(value = "/getData", method = RequestMethod.GET, produces = "application/json")
+    public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException {
 
-//        Date startDate = inputPayload.startDate;
-//        Date endDate = inputPayload.endDate;
-        
+        int dateRange = Integer.valueOf(range);
+        if (dateRange < 0) {
+            dateRange = 1;
+        }
+
+        if (dateRange > 7) {
+            dateRange = 7;
+        }
 
         ArrayList<BusinessReport> businessReports = new ArrayList<>();
-        businessReports.add(generateDummyBusiness(new Date()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        Date dateToWorkWith = simpleDateFormat.parse(startDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateToWorkWith);
+
+
+        List<BusinessReport> reports = new ArrayList<>();
+        for (int i = 0; i < dateRange; i++) {
+            startDate = simpleDateFormat.format(calendar.getTime());
+            System.out.println("start date used for query: " + startDate);
+            BusinessReport report = new BusinessReport(startDate);
+            reports.add(report);
+            calendar.add(Calendar.DATE, 1);
+        }
+
 
         BusinessResponse businessResponse = new BusinessResponse();
-        businessResponse.data = businessReports;
+        businessResponse.data = reports;
 
         return businessResponse;
     }
 
-    private BusinessReport generateDummyBusiness(Date reportingDate) throws IOException {
-        BusinessReport dummyBusinessReport = new BusinessReport(reportingDate);
-
-//        dummyBusinessReport.locations.add(getDummyBusinessLocation("Seattle"));
-//        dummyBusinessReport.locations.add(getDummyBusinessLocation("LA"));
-//        dummyBusinessReport.locations.add(getDummyBusinessLocation("San Fran"));
-//        dummyBusinessReport.locations.add(getDummyBusinessLocation("New York"));
-//        dummyBusinessReport.locations.add(getDummyBusinessLocation("Paris"));
-//
-        return dummyBusinessReport;
-
-    }
-
-    private BusinessLocation getDummyBusinessLocation(String locationName)  {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-
-        BusinessLocation dummyLocation = new BusinessLocation();
-        dummyLocation.name = locationName;
-        dummyLocation.budget = randomDouble(0.00, 10000.00);
-        dummyLocation.netSales = randomDouble(0.00, 15000.00);
-        dummyLocation.checkCount = randomLong(1, 2000);
-        dummyLocation.guestCount = randomLong(2, 4000);
-
-        return dummyLocation;
-    }
-
-    private double randomDouble(double min, double max) {
-        return min + Math.random() * (max - min);
-    }
-
-    private Long randomLong(long min, long max) {
-        return min + (long) (Math.random() * (max - min));
-    }
-
-    //JS Dates
-    //Optinoal Budget
-    //No sales & No guest = closed, return null for guestCount, checkCount and netSales (budget may be non-null)
-    //
 }

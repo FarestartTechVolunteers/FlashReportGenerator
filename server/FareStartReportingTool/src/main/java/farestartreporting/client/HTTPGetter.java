@@ -27,9 +27,6 @@ public class HTTPGetter {
 
      */
 
-    public static void main(String[] args) throws IOException {
-        BusinessLocation maslow = getBusinessLocationData("maslow", 6, "03-11-2019");
-    }
 
     public static String getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
