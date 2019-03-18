@@ -27,13 +27,14 @@ public class HTTPGetter {
      },
 
      */
-    public static BusinessLocation getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
 
+
+    public static String netSalesData(int locationGroupID, String dateOfBusiness) throws IOException {
+        // For net sales
+        dateOfBusiness = "3-11-2019";
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
 
-
         URL url = new URL(urlVariable);
-
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -52,23 +53,18 @@ public class HTTPGetter {
             content.append(inputLine);
         }
         in.close();
+        return content.toString();
+    }
+
+    public static BusinessLocation getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
+
+        String netSalesDataString = netSalesData(locationGroupID, dateOfBusiness);
 
 
-        JSONObject json = new JSONObject(content.toString());
-        JSONArray results = json.getJSONArray("results");
-
-        JSONObject curSalesJSONObject = (JSONObject) results.get(0);
-        JSONObject currentDOB = (JSONObject) curSalesJSONObject.get("current");
-        String currentSales = (String) currentDOB.get("value"); //
-
-        String parsedCurrentSales = currentSales.replaceAll("[^\\d.]", "");
-        double netSales = Strings.isEmpty(parsedCurrentSales) ? 0.0 : Double.parseDouble(parsedCurrentSales);
+        Double netSales = parseNetSales(netSalesDataString);
 
 
-        JSONObject budget = (JSONObject) curSalesJSONObject.get("projected"); // seems like this is the data they use for budget reporting
-        String budgetSales = (String) budget.get("value"); //
-        String parsedBudget = budgetSales.replaceAll("[^\\d.]", "");
-        double budgetedSales = Strings.isEmpty(parsedBudget) ? 0.0 : Double.parseDouble(parsedBudget);
+        Double budgetedSales = parseBudget(netSalesDataString);
 
 
         // To rig the count
@@ -76,11 +72,38 @@ public class HTTPGetter {
         long n = rand.nextInt(10);
 
         //Debugging:
-        System.out.println(urlVariable);
         System.out.println("Getting the data for " + name);
         System.out.println("Getting the real netSales " + netSales);
         System.out.println("Getting the real sales budget " + budgetedSales);
 
         return new BusinessLocation(name, netSales, budgetedSales, n, n);
+    }
+
+    private static JSONObject parseSalesObject(String netSalesDataString) {
+        JSONObject json = new JSONObject(netSalesDataString);
+        JSONArray results = json.getJSONArray("results");
+        JSONObject curSalesJSONObject = (JSONObject) results.get(0);
+        return curSalesJSONObject;
+    }
+
+    private static Double parseBudget(String netSalesDataString) {
+        JSONObject curSalesJSONObject = parseSalesObject(netSalesDataString);
+
+        JSONObject budget = (JSONObject) curSalesJSONObject.get("projected");
+        String budgetSales = (String) budget.get("value"); //
+        String parsedBudget = budgetSales.replaceAll("[^\\d.]", "");
+        double budgetedSales = Strings.isEmpty(parsedBudget) ? 0.0 : Double.parseDouble(parsedBudget);
+        return budgetedSales;
+    }
+
+    private static Double parseNetSales(String netSalesDataString) {
+        JSONObject curSalesJSONObject = parseSalesObject(netSalesDataString);
+
+        JSONObject currentDOB = (JSONObject) curSalesJSONObject.get("current");
+        String currentSales = (String) currentDOB.get("value"); //
+
+        String parsedCurrentSales = currentSales.replaceAll("[^\\d.]", "");
+        double netSales = Strings.isEmpty(parsedCurrentSales) ? 0.0 : Double.parseDouble(parsedCurrentSales);
+        return netSales;
     }
 }
