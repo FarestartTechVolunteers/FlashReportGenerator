@@ -17,22 +17,6 @@ import java.util.concurrent.ExecutionException;
 @Controller
 public class ReportController {
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException, ParseException, IOException {
-        long start = System.currentTimeMillis();
-
-        String startDate = "03-11-2019";
-        WeeklyReport weeklyReport = new WeeklyReport(startDate);
-        int size = weeklyReport.allLocations.size();
-        System.out.println("entries " + size);
-
-        long end = System.currentTimeMillis();
-        System.out.println("Time end " + end);
-        long totalTime = end - start;
-        System.out.println("API took: " + totalTime);
-    }
-
-    private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
-
     @GetMapping("/")
     public String showReport(Model model) throws ParseException, IOException, ExecutionException, InterruptedException {
 
@@ -42,10 +26,8 @@ public class ReportController {
         WeeklyReport weeklyReport = new WeeklyReport(startDate);
 
         model.addAttribute("message", "Report for last week");
-        model.addAttribute("tasks", tasks);
         model.addAttribute("weeklyReport", weeklyReport);
 
         return "report";
     }
-
 }
