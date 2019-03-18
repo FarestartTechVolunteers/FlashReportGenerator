@@ -18,6 +18,7 @@ public class getDataController {
     public static void main(String[] args) throws ParseException, IOException {
         System.out.println("hello");
         String startDate = "03-11-2019";
+        //Todo change it to 7
         int dateRange = 1;
         long start = System.currentTimeMillis();
         System.out.println("Time now " + start);
