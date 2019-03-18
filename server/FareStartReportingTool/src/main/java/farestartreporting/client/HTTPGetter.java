@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Random;
 
 public class HTTPGetter {
 
@@ -27,6 +26,10 @@ public class HTTPGetter {
      },
 
      */
+
+    public static void main(String[] args) throws IOException {
+        BusinessLocation maslow = getBusinessLocationData("maslow", 6, "03-11-2019");
+    }
 
     public static String getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
@@ -110,43 +113,63 @@ public class HTTPGetter {
 
         String netSalesDataString = netSalesData(locationGroupID, dateOfBusiness);
 
-        Double netSales = parseCurrentValue(netSalesDataString);
+        Double netSales = parseValueFieldName(netSalesDataString, "current");
+
+        Double sameDayLastWeekSales = parseSameDayLWData(netSalesDataString);
 
         Double budgetedSales = parseBudget(netSalesDataString);
 
+        // Check Count
+
         String checkCountRes = getCheckCount(locationGroupID, dateOfBusiness);
 
-        Double checkCount = parseCurrentValue(checkCountRes);
+        Double checkCount = parseValueFieldName(checkCountRes, "current");
 
+        Double sameDayLastWeekCheckCount = parseSameDayLWData(checkCountRes);
+
+
+        // Guest Count
         String guestCountRes = getGuestCount(6, dateOfBusiness);
 
-        Double guestCount = parseCurrentValue(guestCountRes);
+        Double guestCount = parseValueFieldName(guestCountRes, "current");
 
+        Double sameDayLastWeekGuestCount = parseSameDayLWData(guestCountRes);
 
         long checkCountLong = checkCount.longValue();
+        long sameDayLastWeekCheckCountL = sameDayLastWeekCheckCount.longValue();
         long guestCountLong = guestCount.longValue();
 
+        long sameDayLastWeekGuestCountL = sameDayLastWeekGuestCount.longValue();
 
         //Debugging:
         System.out.println("Getting the data for " + name);
         System.out.println("Getting the real netSales " + netSales);
+        System.out.println("Getting the real SDLW " + sameDayLastWeekSales);
         System.out.println("Getting the real sales budget " + budgetedSales);
         System.out.println("Getting the real checkCountLong " + checkCountLong);
+        System.out.println("Getting the real SDLW Check count " + sameDayLastWeekCheckCount);
         System.out.println("Getting the real guestCountLong " + guestCountLong);
+        System.out.println("Getting the real SDLW guestCountLong " + sameDayLastWeekGuestCount);
 
-        return new BusinessLocation(name, netSales, budgetedSales, checkCountLong, guestCountLong);
+        return new BusinessLocation(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL);
+    }
+
+
+    private static Double parseSameDayLWData(String netSalesDataString) {
+        Double last = parseValueFieldName(netSalesDataString, "last");
+        return last;
     }
 
     //Net sales, counts apparently has all their information stored in the first JSON node.
-    private static JSONObject parseFirstObject(String netSalesDataString) {
+    private static JSONObject ParseJasonObjectWithIndex(String netSalesDataString, int index) {
         JSONObject json = new JSONObject(netSalesDataString);
         JSONArray results = json.getJSONArray("results");
-        JSONObject curSalesJSONObject = (JSONObject) results.get(0);
+        JSONObject curSalesJSONObject = (JSONObject) results.get(index);
         return curSalesJSONObject;
     }
 
     private static Double parseBudget(String netSalesDataString) {
-        JSONObject curSalesJSONObject = parseFirstObject(netSalesDataString);
+        JSONObject curSalesJSONObject = ParseJasonObjectWithIndex(netSalesDataString, 0);
 
         JSONObject budget = (JSONObject) curSalesJSONObject.get("projected");
         String budgetSales = (String) budget.get("value"); //
@@ -155,10 +178,10 @@ public class HTTPGetter {
         return budgetedSales;
     }
 
-    private static Double parseCurrentValue(String netSalesDataString) {
-        JSONObject curSalesJSONObject = parseFirstObject(netSalesDataString);
+    private static Double parseValueFieldName(String netSalesDataString, String fieldName) {
+        JSONObject curSalesJSONObject = ParseJasonObjectWithIndex(netSalesDataString, 0);
 
-        JSONObject currentDOB = (JSONObject) curSalesJSONObject.get("current");
+        JSONObject currentDOB = (JSONObject) curSalesJSONObject.get(fieldName);
         String currentSales = (String) currentDOB.get("value"); //
 
         String parsedCurrentSales = currentSales.replaceAll("[^\\d.]", "");
