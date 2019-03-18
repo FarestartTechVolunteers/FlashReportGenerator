@@ -28,10 +28,60 @@ public class HTTPGetter {
 
      */
 
+    public static String getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
+        // For net sales
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/8";
+
+        URL url = new URL(urlVariable);
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("X-UserAuthToken", AUTH_TOKEN);
+        con.setRequestProperty("X-UserId", USER_ID);
+
+        int status = con.getResponseCode();
+        System.out.println(status);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        return content.toString();
+    }
+
+    public static String getGuestCount(int locationGroupID, String dateOfBusiness) throws IOException {
+        // For net sales
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/7";
+
+        URL url = new URL(urlVariable);
+
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("X-UserAuthToken", AUTH_TOKEN);
+        con.setRequestProperty("X-UserId", USER_ID);
+
+        int status = con.getResponseCode();
+        System.out.println(status);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        return content.toString();
+    }
 
     public static String netSalesData(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
-        dateOfBusiness = "3-11-2019";
         String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
 
         URL url = new URL(urlVariable);
@@ -60,26 +110,35 @@ public class HTTPGetter {
 
         String netSalesDataString = netSalesData(locationGroupID, dateOfBusiness);
 
-
-        Double netSales = parseNetSales(netSalesDataString);
-
+        Double netSales = parseCurrentValue(netSalesDataString);
 
         Double budgetedSales = parseBudget(netSalesDataString);
 
+        String checkCountRes = getCheckCount(locationGroupID, dateOfBusiness);
 
-        // To rig the count
-        Random rand = new Random();
-        long n = rand.nextInt(10);
+        Double checkCount = parseCurrentValue(checkCountRes);
+
+        String guestCountRes = getGuestCount(6, dateOfBusiness);
+
+        Double guestCount = parseCurrentValue(guestCountRes);
+
+
+        long checkCountLong = checkCount.longValue();
+        long guestCountLong = guestCount.longValue();
+
 
         //Debugging:
         System.out.println("Getting the data for " + name);
         System.out.println("Getting the real netSales " + netSales);
         System.out.println("Getting the real sales budget " + budgetedSales);
+        System.out.println("Getting the real checkCountLong " + checkCountLong);
+        System.out.println("Getting the real guestCountLong " + guestCountLong);
 
-        return new BusinessLocation(name, netSales, budgetedSales, n, n);
+        return new BusinessLocation(name, netSales, budgetedSales, checkCountLong, guestCountLong);
     }
 
-    private static JSONObject parseSalesObject(String netSalesDataString) {
+    //Net sales, counts apparently has all their information stored in the first JSON node.
+    private static JSONObject parseFirstObject(String netSalesDataString) {
         JSONObject json = new JSONObject(netSalesDataString);
         JSONArray results = json.getJSONArray("results");
         JSONObject curSalesJSONObject = (JSONObject) results.get(0);
@@ -87,7 +146,7 @@ public class HTTPGetter {
     }
 
     private static Double parseBudget(String netSalesDataString) {
-        JSONObject curSalesJSONObject = parseSalesObject(netSalesDataString);
+        JSONObject curSalesJSONObject = parseFirstObject(netSalesDataString);
 
         JSONObject budget = (JSONObject) curSalesJSONObject.get("projected");
         String budgetSales = (String) budget.get("value"); //
@@ -96,8 +155,8 @@ public class HTTPGetter {
         return budgetedSales;
     }
 
-    private static Double parseNetSales(String netSalesDataString) {
-        JSONObject curSalesJSONObject = parseSalesObject(netSalesDataString);
+    private static Double parseCurrentValue(String netSalesDataString) {
+        JSONObject curSalesJSONObject = parseFirstObject(netSalesDataString);
 
         JSONObject currentDOB = (JSONObject) curSalesJSONObject.get("current");
         String currentSales = (String) currentDOB.get("value"); //
