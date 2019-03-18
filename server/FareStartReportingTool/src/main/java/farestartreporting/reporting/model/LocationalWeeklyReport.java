@@ -23,7 +23,7 @@ public class LocationalWeeklyReport {
     public LocationalWeeklyReport(String name, String startDate) throws IOException, ParseException {
         this.name = name;
         this.startDate = startDate;
-        int dateRange = 2; //TODO: change to 7
+        int dateRange = 7; //TODO: change to 7
 
         List<DailyData> dailyData = new ArrayList<>();
 

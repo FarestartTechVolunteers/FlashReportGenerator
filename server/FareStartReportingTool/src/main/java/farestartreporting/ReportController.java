@@ -18,7 +18,7 @@ public class ReportController {
 
     private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
 
-    @GetMapping("/report")
+    @GetMapping("/")
     public String showReport(Model model) throws ParseException, IOException {
 
         // Hard coded to show data from March 11 - March 17 of 2019
