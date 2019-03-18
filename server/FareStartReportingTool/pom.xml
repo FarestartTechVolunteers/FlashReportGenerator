@@ -7,6 +7,7 @@
     <groupId>FareStartReportingTool</groupId>
     <artifactId>FareStartReportingTool</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging> jar </packaging>
     <properties>
         <java.version>1.8</java.version>
         <bootstrap.version>4.2.1</bootstrap.version>

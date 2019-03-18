@@ -48,18 +48,6 @@ public class HTTPNonEssential {
         in.close();
 
         System.out.println(content.toString());
-
-//        {"id":1,"isReversed":false,"name":"Net Sales"}
-//        {
-//            "id": 7,
-//                "isReversed": false,
-//                "name": "Guest Ct"
-//        },
-//        {
-//            "id": 8,
-//                "isReversed": false,
-//                "name": "Check Ct"
-//        },
     }
 
 

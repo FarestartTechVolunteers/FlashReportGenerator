@@ -37,7 +37,7 @@ public class getDataController {
         List<BusinessReport> reports = new ArrayList<>();
         for (int i = 0; i < dateRange; i++) {
             startDate = simpleDateFormat.format(calendar.getTime());
-            System.out.println("start date used for query: " + startDate);
+//            System.out.println("start date used for query: " + startDate);
             BusinessReport report = new BusinessReport(startDate);
             reports.add(report);
             calendar.add(Calendar.DATE, 1);

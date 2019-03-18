@@ -139,15 +139,15 @@ public class HTTPGetter {
         long sameDayLastWeekGuestCountL = sameDayLastWeekGuestCount.longValue();
 
         //Debugging:
-        System.out.println("===== Rerporting for " + dateOfBusiness + " =====");
-        System.out.println("Getting the data for " + name);
-        System.out.println("Getting the real netSales " + netSales);
-        System.out.println("Getting the real SDLW " + sameDayLastWeekSales);
-        System.out.println("Getting the real sales budget " + budgetedSales);
-        System.out.println("Getting the real checkCountLong " + checkCountLong);
-        System.out.println("Getting the real SDLW Check count " + sameDayLastWeekCheckCount);
-        System.out.println("Getting the real guestCountLong " + guestCountLong);
-        System.out.println("Getting the real SDLW guestCountLong " + sameDayLastWeekGuestCount);
+//        System.out.println("===== Rerporting for " + dateOfBusiness + " =====");
+//        System.out.println("Getting the data for " + name);
+//        System.out.println("Getting the real netSales " + netSales);
+//        System.out.println("Getting the real SDLW " + sameDayLastWeekSales);
+//        System.out.println("Getting the real sales budget " + budgetedSales);
+//        System.out.println("Getting the real checkCountLong " + checkCountLong);
+//        System.out.println("Getting the real SDLW Check count " + sameDayLastWeekCheckCount);
+//        System.out.println("Getting the real guestCountLong " + guestCountLong);
+//        System.out.println("Getting the real SDLW guestCountLong " + sameDayLastWeekGuestCount);
 
         return new DailyData(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL);
     }
