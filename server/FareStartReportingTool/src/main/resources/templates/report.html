@@ -37,31 +37,101 @@
 
     <h2>Report For : <span th:text="${locationalWeeklyReport.name}"></span></h2>
     <p>startDate: <span th:text="${locationalWeeklyReport.startDate}"></span></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
 
-                <th scope="col">Monday</th>
-                <th scope="col">Tuesday</th>
-                <th scope="col">Wednesday</th>
-                <th scope="col">Thursday</th>
-                <th scope="col">Friday</th>
-                <th scope="col">Saturday</th>
-                <th scope="col">Sunday</th>
-            </tr>
+                    <th scope="col">Monday</th>
+                    <th scope="col">Tuesday</th>
+                    <th scope="col">Wednesday</th>
+                    <th scope="col">Thursday</th>
+                    <th scope="col">Friday</th>
+                    <th scope="col">Saturday</th>
+                    <th scope="col">Sunday</th>
+                </tr>
 
-             <tbody>
-                <tr><td th:text="${locationalWeeklyReport.data[0].netSales}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWSales}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].budget}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].guestCount}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWGuestCount}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].checkCount}"></td></tr>
-                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWCheckCount}"></td></tr>
-            </tbody>
-        </thead>
-    </table>
+                 <tbody>
+                      <tr>
+                        <th scope="row">"Net Sales"></th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].netSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].netSales}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">"Same Day Last Week Sales"></th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].SDLWSales}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].SDLWSales}"></td>
+                    </tr>
+                      <tr>
+                        <th scope="row">"Budget"></th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].budget}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].budget}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Guest Count</th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].guestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].guestCount}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Same Day Last Guest Count</th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].SDLWGuestCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].SDLWGuestCount}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Check Count</th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].checkCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].checkCount}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Same Day Last Check Count</th>
+
+                        <td th:text="${locationalWeeklyReport.data[0].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[1].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[2].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[3].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[4].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[5].SDLWCheckCount}"></td>
+                        <td th:text="${locationalWeeklyReport.data[6].SDLWCheckCount}"></td>
+                    </tr>
+                </tbody>
+            </thead>
+        </table>
 
 
     </span>
