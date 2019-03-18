@@ -1,13 +1,14 @@
 package farestartreporting.reporting.model;
 
 import farestartreporting.dataRetriever.BusinessLocationRetrival;
+import farestartreporting.dataRetriever.RetrieveInWeeklyBatchCallable;
 import farestartreporting.responseModel.DailyData;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import static farestartreporting.reporting.model.LocationsOfInterest.interestedInformation;
 
@@ -16,17 +17,38 @@ public class LocationalWeeklyReport {
     public String startDate;
     public List<DailyData> data;
 
+    private static final int NTHREDS = 7;
+
     private BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
+    private ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
 
-    //In order of entry page for data verification
-
+//    public static void main(String[] args) throws InterruptedException, ExecutionException, ParseException, IOException {
+//
+//        System.out.println("multi thread to 7");
+//        String name = "Maslows";
+//        String startDate = "03-11-2019";
+//
+//        long start = System.currentTimeMillis();
+//
+//        LocationalWeeklyReport locationalWeeklyReport = new LocationalWeeklyReport(name, startDate);
+//        System.out.println(locationalWeeklyReport.name);
+//
+//        long end = System.currentTimeMillis();
+//        System.out.println("Time end " + end);
+//        long totalTime = end - start;
+//        System.out.println("API took: " + totalTime);
+//    }
 
     public LocationalWeeklyReport(String name, String startDate) throws IOException, ParseException, ExecutionException, InterruptedException {
         this.name = name;
         this.startDate = startDate;
-        int dateRange = 7; //TODO: change to 7
+        int dateRange = 7;
 
-        List<DailyData> dailyData = new ArrayList<>();
+        List<Future<DailyData>> dailyData = new ArrayList<>();
+        List<CompletableFuture<DailyData>> futuresList = new ArrayList<>();
+
+
+        List<DailyData> fetchedData = new ArrayList<>();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
         Date dateToWorkWith = simpleDateFormat.parse(startDate);
@@ -36,11 +58,29 @@ public class LocationalWeeklyReport {
         for (int i = 0; i < dateRange; i++) {
             startDate = simpleDateFormat.format(calendar.getTime());
             System.out.println("start date used for query: " + startDate);
-            DailyData report = retreiver.getReport(name, interestedInformation.get(name), startDate);
-            dailyData.add(report);
+            Callable<DailyData> reportWorker = new RetrieveInWeeklyBatchCallable(retreiver, startDate, name, interestedInformation);
+            Future<DailyData> report = executor.submit(reportWorker);
+            CompletableFuture<DailyData> completableFutureReport = makeCompletableFuture(report);
+            futuresList.add(completableFutureReport);
             calendar.add(Calendar.DATE, 1);
         }
-        this.data = dailyData;
 
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[futuresList.size()])).join();
+
+        for (CompletableFuture<DailyData> completableReport : futuresList) {
+            fetchedData.add(completableReport.get());
+        }
+
+        this.data = fetchedData;
+    }
+
+    public static <T> CompletableFuture<T> makeCompletableFuture(Future<T> future) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

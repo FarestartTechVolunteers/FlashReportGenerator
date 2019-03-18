@@ -17,6 +17,20 @@ import java.util.concurrent.ExecutionException;
 @Controller
 public class ReportController {
 
+    public static void main(String[] args) throws InterruptedException, ExecutionException, ParseException, IOException {
+        long start = System.currentTimeMillis();
+
+        String startDate = "03-11-2019";
+        WeeklyReport weeklyReport = new WeeklyReport(startDate);
+        int size = weeklyReport.allLocations.size();
+        System.out.println("entries " + size);
+
+        long end = System.currentTimeMillis();
+        System.out.println("Time end " + end);
+        long totalTime = end - start;
+        System.out.println("API took: " + totalTime);
+    }
+
     private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
 
     @GetMapping("/")
@@ -33,31 +47,5 @@ public class ReportController {
 
         return "report";
     }
-
-
-    public BusinessResponse getLastWeekReportOld() throws ParseException, IOException, ExecutionException, InterruptedException {
-        String startDate = "03-11-2019";
-        int dateRange = 1;
-        ArrayList<BusinessReport> businessReports = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        Date dateToWorkWith = simpleDateFormat.parse(startDate);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dateToWorkWith);
-
-
-        List<BusinessReport> reports = new ArrayList<>();
-        for (int i = 0; i < dateRange; i++) {
-            startDate = simpleDateFormat.format(calendar.getTime());
-            System.out.println("start date used for query: " + startDate);
-            BusinessReport report = new BusinessReport(startDate);
-            reports.add(report);
-            calendar.add(Calendar.DATE, 1);
-        }
-
-        BusinessResponse businessResponse = new BusinessResponse();
-        businessResponse.data = reports;
-        return businessResponse;
-    }
-
 
 }
