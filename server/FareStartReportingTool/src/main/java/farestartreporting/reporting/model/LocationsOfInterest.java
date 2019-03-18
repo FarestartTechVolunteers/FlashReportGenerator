@@ -8,7 +8,7 @@ public class LocationsOfInterest {
 
     static {
         interestedInformation = new HashMap<>();
-        interestedInformation.put("Maslows ", 6);
+        interestedInformation.put("Maslows", 6);
 
         interestedInformation.put("Rise Coffee", 7);
         interestedInformation.put("2100 Cafe", 2);
