@@ -1,6 +1,6 @@
 package farestartreporting.responseModel;
 
-public class BusinessLocation {
+public class DailyData {
     public String name;
     public Double netSales;
     public Double SDLWSales;
@@ -11,7 +11,7 @@ public class BusinessLocation {
     public Long checkCount;
     public Long SDLWCheckCount;
 
-    public BusinessLocation(String name, Double netSales, Double SDLWSales, Double budget, Long guestCount, Long SDLWGuestCount, Long checkCount, Long SDLWCheckCount) {
+    public DailyData(String name, Double netSales, Double SDLWSales, Double budget, Long guestCount, Long SDLWGuestCount, Long checkCount, Long SDLWCheckCount) {
         this.name = name;
         this.netSales = netSales;
         this.SDLWSales = SDLWSales;
@@ -22,7 +22,7 @@ public class BusinessLocation {
         this.SDLWCheckCount = SDLWCheckCount;
     }
 
-    public BusinessLocation() {
+    public DailyData() {
 
     }
 }

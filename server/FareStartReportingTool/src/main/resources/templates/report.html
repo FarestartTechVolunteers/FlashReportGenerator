@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Weekly Report</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">FareStart</a>
+</nav>
+
+<!--<img src="https://www.farestart.org/sites/all/themes/fs/logo.svg" alt="Home">-->
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>FareStart</h1>
+        <h2>
+            Weekly Report of March 11, 2019
+        </h2>
+    </div>
+
+    <!--<ol>-->
+    <!--<li th:each="task : ${tasks}" th:text="${task}"></li>-->
+    <!--</ol>-->
+    <p>How many entries: <span th:text="${weeklyReport.allLocations.size()}"></span></p>
+    <span th:each="locationalWeeklyReport : ${weeklyReport.allLocations}">
+
+    <p>name: <span th:text="${locationalWeeklyReport.name}"></span></p>
+    <p>startDate: <span th:text="${locationalWeeklyReport.startDate}"></span></p>
+    <p>data: <span th:text="${locationalWeeklyReport.data.size()}"></span></p>
+
+            <span th:each="daily : ${locationalWeeklyReport.data}">
+                <p>name: <span th:text="${daily.name}"></span></p>
+                <p>netSales: <span th:text="${daily.netSales}"></span></p>
+
+            </span>
+
+    <p>firstItem: <span th:text="${locationalWeeklyReport.data[0].name}"></span></p>
+
+    </span>
+
+
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

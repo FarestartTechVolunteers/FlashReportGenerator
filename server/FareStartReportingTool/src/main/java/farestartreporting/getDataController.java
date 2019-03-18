@@ -1,10 +1,7 @@
 package farestartreporting;
 
-import com.sun.tools.corba.se.idl.InvalidArgument;
-import farestartreporting.responseModel.BusinessLocation;
 import farestartreporting.responseModel.BusinessResponse;
 import farestartreporting.responseModel.BusinessReport;
-import farestartreporting.responseModel.GetDataInputPayload;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,7 +15,7 @@ import java.util.List;
 @RestController
 public class getDataController {
 
-    @RequestMapping(value = "/getData", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/api/getData", method = RequestMethod.GET, produces = "application/json")
     public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException {
 
         int dateRange = Integer.valueOf(range);

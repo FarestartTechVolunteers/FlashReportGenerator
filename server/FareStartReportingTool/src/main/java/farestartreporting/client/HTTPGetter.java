@@ -1,6 +1,6 @@
 package farestartreporting.client;
 
-import farestartreporting.responseModel.BusinessLocation;
+import farestartreporting.responseModel.DailyData;
 import org.apache.logging.log4j.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,7 +106,7 @@ public class HTTPGetter {
         return content.toString();
     }
 
-    public static BusinessLocation getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
+    public static DailyData getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException {
 
         String netSalesDataString = netSalesData(locationGroupID, dateOfBusiness);
 
@@ -139,6 +139,7 @@ public class HTTPGetter {
         long sameDayLastWeekGuestCountL = sameDayLastWeekGuestCount.longValue();
 
         //Debugging:
+        System.out.println("===== Rerporting for " + dateOfBusiness + " =====");
         System.out.println("Getting the data for " + name);
         System.out.println("Getting the real netSales " + netSales);
         System.out.println("Getting the real SDLW " + sameDayLastWeekSales);
@@ -148,7 +149,7 @@ public class HTTPGetter {
         System.out.println("Getting the real guestCountLong " + guestCountLong);
         System.out.println("Getting the real SDLW guestCountLong " + sameDayLastWeekGuestCount);
 
-        return new BusinessLocation(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL);
+        return new DailyData(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL);
     }
 
 
