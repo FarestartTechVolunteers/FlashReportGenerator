@@ -34,17 +34,35 @@
     <p>How many entries: <span th:text="${weeklyReport.allLocations.size()}"></span></p>
     <span th:each="locationalWeeklyReport : ${weeklyReport.allLocations}">
 
-    <p>name: <span th:text="${locationalWeeklyReport.name}"></span></p>
+
+    <h2>Report For : <span th:text="${locationalWeeklyReport.name}"></span></h2>
     <p>startDate: <span th:text="${locationalWeeklyReport.startDate}"></span></p>
-    <p>data: <span th:text="${locationalWeeklyReport.data.size()}"></span></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
 
-            <span th:each="daily : ${locationalWeeklyReport.data}">
-                <p>name: <span th:text="${daily.name}"></span></p>
-                <p>netSales: <span th:text="${daily.netSales}"></span></p>
+                <th scope="col">Monday</th>
+                <th scope="col">Tuesday</th>
+                <th scope="col">Wednesday</th>
+                <th scope="col">Thursday</th>
+                <th scope="col">Friday</th>
+                <th scope="col">Saturday</th>
+                <th scope="col">Sunday</th>
+            </tr>
 
-            </span>
+             <tbody>
+                <tr><td th:text="${locationalWeeklyReport.data[0].netSales}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWSales}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].budget}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].guestCount}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWGuestCount}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].checkCount}"></td></tr>
+                <tr><td th:text="${locationalWeeklyReport.data[0].SDLWCheckCount}"></td></tr>
+            </tbody>
+        </thead>
+    </table>
 
-    <p>firstItem: <span th:text="${locationalWeeklyReport.data[0].name}"></span></p>
 
     </span>
 
