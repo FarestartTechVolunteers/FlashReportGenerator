@@ -4,6 +4,7 @@ import farestartreporting.dataRetriever.BusinessLocationRetrival;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class BusinessReport {
     public String date;
@@ -37,7 +38,7 @@ public class BusinessReport {
     }
 
 
-    public BusinessReport(String date) throws IOException {
+    public BusinessReport(String date) throws IOException, ExecutionException, InterruptedException {
 
 
         List<DailyData> locations = new ArrayList<>();

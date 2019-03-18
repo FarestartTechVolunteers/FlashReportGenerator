@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static farestartreporting.reporting.model.LocationsOfInterest.interestedInformation;
 
@@ -20,7 +21,7 @@ public class LocationalWeeklyReport {
     //In order of entry page for data verification
 
 
-    public LocationalWeeklyReport(String name, String startDate) throws IOException, ParseException {
+    public LocationalWeeklyReport(String name, String startDate) throws IOException, ParseException, ExecutionException, InterruptedException {
         this.name = name;
         this.startDate = startDate;
         int dateRange = 7; //TODO: change to 7

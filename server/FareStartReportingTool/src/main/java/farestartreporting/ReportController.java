@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class ReportController {
@@ -19,7 +20,7 @@ public class ReportController {
     private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
 
     @GetMapping("/")
-    public String showReport(Model model) throws ParseException, IOException {
+    public String showReport(Model model) throws ParseException, IOException, ExecutionException, InterruptedException {
 
         // Hard coded to show data from March 11 - March 17 of 2019
 
@@ -34,7 +35,7 @@ public class ReportController {
     }
 
 
-    public BusinessResponse getLastWeekReportOld() throws ParseException, IOException {
+    public BusinessResponse getLastWeekReportOld() throws ParseException, IOException, ExecutionException, InterruptedException {
         String startDate = "03-11-2019";
         int dateRange = 1;
         ArrayList<BusinessReport> businessReports = new ArrayList<>();
