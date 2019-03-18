@@ -17,7 +17,7 @@ public class URLEncoderHelperFSTest {
     @Test
     public void convertDate() throws UnsupportedEncodingException {
         Date d = new Date("16 Mar 2019 19:52:00 GMT");
-        String s = encoder.convertURL(d);
+        String s = URLEncoderHelperFS.convertURL(d);
 
         String expected = "03-16-2019";
         assertEquals(expected, s);

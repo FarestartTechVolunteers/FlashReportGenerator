@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class URLEncoderHelperFS {
 
-    public static String convertURL(Date date) throws UnsupportedEncodingException {
+    public static String convertURL(Date date) {
 //        3-10-2019
         String dateString = date.toString();
         System.out.println(dateString);

@@ -1,20 +1,12 @@
-package farestartreporting.responseModel;
+package farestartreporting.reporting.model;
 
-import farestartreporting.dataRetriever.BusinessLocationRetrival;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.IOException;
-import java.util.*;
+public class LocationsOfInterest {
+    public static Map<String, Integer> interestedInformation;
 
-public class BusinessReport {
-    public String date;
-    public List<DailyData> locations;
-    //Name and location group ID
-    public Map<String, Integer> interestedInformation;
-
-    private BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
-
-    //In order of entry page for data verification
-    {
+    static {
         interestedInformation = new HashMap<>();
         interestedInformation.put("Maslows ", 6);
 
@@ -35,21 +27,4 @@ public class BusinessReport {
 //        interestedInformation.put("CONTRACT OPERATIONS", 23);
 //        interestedInformation.put("Student+Staff Lunch", 26);
     }
-
-
-    public BusinessReport(String date) throws IOException {
-
-
-        List<DailyData> locations = new ArrayList<>();
-
-        for (String restaurantName : interestedInformation.keySet()) {
-            DailyData report = retreiver.getReport(restaurantName, interestedInformation.get(restaurantName), date);
-            locations.add(report);
-        }
-        System.out.println("finished business report");
-
-        this.date = date;
-        this.locations = locations;
-    }
-
 }
