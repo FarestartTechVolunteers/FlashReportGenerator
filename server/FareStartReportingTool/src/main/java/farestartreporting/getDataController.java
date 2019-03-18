@@ -46,7 +46,6 @@ public class getDataController {
             calendar.add(Calendar.DATE, 1);
         }
 
-
         BusinessResponse businessResponse = new BusinessResponse();
         businessResponse.data = reports;
 
