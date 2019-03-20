@@ -39,7 +39,10 @@ async function fetchData(firstDay) {
   const transformed2 = transform(res2.data)
 
   return {
-    locations: transformed1.locations.concat(transformed2.locations),
+    locations: transformed1.locations.map((loc, index) => ({
+      name: loc.name,
+      days: loc.days.concat(transformed2.locations[index].days)
+    })),
     data: transformed1.data.concat(transformed2.data)
   }
 }
