@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import moment from "moment";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
