@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static farestartreporting.reporting.model.CacheService.weeklyReportCache;
+
 @Controller
 public class ReportController {
 
@@ -23,7 +25,7 @@ public class ReportController {
         // Hard coded to show data from March 11 - March 17 of 2019
 
         String startDate = "03-11-2019";
-        WeeklyReport weeklyReport = new WeeklyReport(startDate);
+        WeeklyReport weeklyReport = weeklyReportCache.getUnchecked(startDate);
 
         model.addAttribute("message", "Report for last week");
         model.addAttribute("weeklyReport", weeklyReport);
