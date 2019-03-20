@@ -58,7 +58,7 @@ const thisWeekDays = (location) => {
 
 const DataTable = ({ locations=[] }) => {
   return (
-    <table>
+    <table className='w-100'>
       <thead>
         <tr>
           <td className='pv2 ph3'>{/*Week of 3/11/2019*/}</td>

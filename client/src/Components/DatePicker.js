@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
+import isEmpty from 'lodash/isEmpty'
 
 function getWeekDays(weekStart) {
   const days = [weekStart];
@@ -28,41 +29,57 @@ function getWeekRange(date) {
   };
 }
 
-class DatePicker extends Component {
-  handleDayChange = date => {
-    const { handleSetWeek } = this.props;
-    handleSetWeek(getWeekDays(getWeekRange(date).from));
+const DatePicker = ({ activeWeek, onSetWeek }) => {
+  const [isPickerVisible, setPickerVisibility] = React.useState(false)
+
+  const handleDayChange = date => {
+    onSetWeek(getWeekDays(getWeekRange(date).from));
+    setPickerVisibility(false)
   };
 
-  render() {
-    const { activeWeek } = this.props;
+  const daysAreSelected = activeWeek.length > 0;
 
-    const daysAreSelected = activeWeek.length > 0;
+  const modifiers = {
+    selectedRange: daysAreSelected && {
+      from: activeWeek[0],
+      to: activeWeek[6]
+    },
+    selectedRangeStart: daysAreSelected && activeWeek[0],
+    selectedRangeEnd: daysAreSelected && activeWeek[6]
+  };
 
-    const modifiers = {
-      // hoverRange,
-      selectedRange: daysAreSelected && {
-        from: activeWeek[0],
-        to: activeWeek[6]
-      },
-      // hoverRangeStart: hoverRange && hoverRange.from,
-      // hoverRangeEnd: hoverRange && hoverRange.to,
-      selectedRangeStart: daysAreSelected && activeWeek[0],
-      selectedRangeEnd: daysAreSelected && activeWeek[6]
-    };
-
-    return (
-      <div className="SelectedWeekExample">
-        <DayPicker
-          selectedDays={activeWeek}
-          showWeekNumbers
-          showOutsideDays
-          modifiers={modifiers}
-          onDayClick={this.handleDayChange}
-        />
+  return (
+    <div className='bg-light-gray'>
+      <div>
+        {!isEmpty(activeWeek) ? (
+          <React.Fragment>
+            {moment(activeWeek[0]).format("LL")} – {moment(activeWeek[6]).format("LL")}
+            <button type='button' onClick={() => setPickerVisibility(true)}>
+              Change
+            </button>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <button type='button' onClick={() => setPickerVisibility(true)}>
+              Select a date range
+            </button>
+          </React.Fragment>
+        )}
       </div>
-    );
-  }
+
+      {isPickerVisible && (
+        <div className='pa3'>
+          <DayPicker
+            selectedDays={activeWeek}
+            showWeekNumbers
+            showOutsideDays
+            modifiers={modifiers}
+            onDayClick={handleDayChange}
+          />
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default DatePicker;

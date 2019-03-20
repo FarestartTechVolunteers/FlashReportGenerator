@@ -18,13 +18,9 @@ class App extends Component {
     dataForWeek: {}
   };
 
-  handleSetWeek = async week => {
-    this.setState({
-      activeWeek: week
-    });
-
-    const dataForWeek = await fetchDataForDays(week);
-
+  handleSetWeek = async (activeWeek) => {
+    this.setState({ activeWeek });
+    const dataForWeek = await fetchDataForDays(activeWeek);
     this.setState({ dataForWeek });
   };
 
@@ -33,34 +29,20 @@ class App extends Component {
     const { locations } = dataForWeek
 
     return (
-      <div className="sans-serif">
-        <div className='flex flex-row'>
-          <div className='flex-0'>
-            {/* <Router>
-                <Nav />
-                </Router> */}
+      <div className='mw8 center bg-white pa3'>
+        <h1>FareStart: Flash Report</h1>
 
-            <DatePicker
-            activeWeek={activeWeek}
-            handleSetWeek={this.handleSetWeek}
-            />
-          </div>
-          <div className='flex-1 ml4'>
-            {activeWeek.length === 7 && (
-            <h1>
-                {moment(activeWeek[0]).format("LL")} –{" "}
-                {moment(activeWeek[6]).format("LL")}
-            </h1>
-            )}
-            {!isEmpty(dataForWeek) && (
-              <React.Fragment>
+        <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+
+        {!isEmpty(dataForWeek) ? (
+          <React.Fragment>
             <DataTable locations={locations} />
             <ChartView data={dataForWeek} />
             <CompanyChart data={dataForWeek} />
-              </React.Fragment>
-            )}
-          </div>
-        </div>
+          </React.Fragment>
+        ) : (
+          <p>Please select a date range to view the report.</p>
+        )}
       </div>
     );
   }
