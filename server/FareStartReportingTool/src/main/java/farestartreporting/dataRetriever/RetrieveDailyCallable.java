@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 
-public class RetrieveInWeeklyBatchCallable implements Callable<DailyData> {
+public class RetrieveDailyCallable implements Callable<DailyData> {
 
     private BusinessLocationRetrival retreiver = new BusinessLocationRetrival();
     private String startDate;
@@ -14,7 +14,7 @@ public class RetrieveInWeeklyBatchCallable implements Callable<DailyData> {
     private Map<String, Integer> interestedInformation;
 
 
-    public RetrieveInWeeklyBatchCallable(BusinessLocationRetrival retreiver, String startDate, String name, Map<String,Integer> interestedInformation) {
+    public RetrieveDailyCallable(BusinessLocationRetrival retreiver, String startDate, String name, Map<String,Integer> interestedInformation) {
         this.retreiver = retreiver;
         this.startDate = startDate;
         this.name = name;
