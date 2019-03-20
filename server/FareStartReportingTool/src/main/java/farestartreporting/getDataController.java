@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static farestartreporting.reporting.model.CacheService.businessReportCache;
+
 @RestController
 public class getDataController {
 
@@ -62,7 +64,9 @@ public class getDataController {
         List<BusinessReport> reports = new ArrayList<>();
         for (int i = 0; i < dateRange; i++) {
             startDate = simpleDateFormat.format(calendar.getTime());
-            BusinessReport report = new BusinessReport(startDate);
+            BusinessReport report = businessReportCache.getUnchecked(startDate);
+
+//            BusinessReport report = new BusinessReport(startDate);
             reports.add(report);
             calendar.add(Calendar.DATE, 1);
         }
