@@ -38,7 +38,7 @@ public class getDataController {
 //
 //    }
 
-
+    @CrossOrigin
     @RequestMapping(value = "/api/getData", method = RequestMethod.GET, produces = "application/json")
     public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException, ExecutionException, InterruptedException {
 
