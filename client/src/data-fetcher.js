@@ -141,9 +141,9 @@ const transform = response => {
 };
 
 async function fetchDataForDays(days) {
-  const res = await axios.post('/getData', {
-    startDate: '2012-01-01T00:00:00.511Z',
-    endDate: '2012-01-15T00:00:00.511Z',
+  const res = await axios.get('/api/getData', {
+    startDate: '2019-03-07',
+    range: 14
   })
   return transform(res.data);
 }
