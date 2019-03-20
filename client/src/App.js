@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-import moment from "moment";
+import { Router } from "@reach/router"
 import Nav from "./Layout/Nav";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import isEmpty from 'lodash/isEmpty'
 
 import DatePicker from "./Components/DatePicker";
 import DataTable from "./Components/DataTable";
-import fetchDataForDays from "./data-fetcher";
+import fetchDataForWeek from "./data-fetcher";
 import ChartView from "./Components/ChartView";
 import CompanyChart from "./Components/CompanyChart";
 
 import "tachyons/css/tachyons.css";
+
+const Overview = ({ locations }) => <DataTable locations={locations} />
+
+const Trends = ({ dataForWeek }) => (
+  <React.Fragment>
+    <ChartView data={dataForWeek} />
+    <CompanyChart data={dataForWeek} />
+  </React.Fragment>
+)
 
 class App extends Component {
   state = {
@@ -20,7 +28,7 @@ class App extends Component {
 
   handleSetWeek = async (activeWeek) => {
     this.setState({ activeWeek });
-    const dataForWeek = await fetchDataForDays(activeWeek);
+    const dataForWeek = await fetchDataForWeek(activeWeek[0]);
     this.setState({ dataForWeek });
   };
 
@@ -30,15 +38,23 @@ class App extends Component {
 
     return (
       <div className='mw8 center bg-white pa3'>
-        <h1>FareStart: Flash Report</h1>
-
-        <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+        <div className='flex flex-row items-baseline justify-between'>
+          <div className='flex-0'>
+            <h1>FareStart: Flash Report</h1>
+          </div>
+          <div className='flex-0'>
+            <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+          </div>
+        </div>
 
         {!isEmpty(dataForWeek) ? (
           <React.Fragment>
-            <DataTable locations={locations} />
-            <ChartView data={dataForWeek} />
-            <CompanyChart data={dataForWeek} />
+            <Nav />
+
+            <Router>
+              <Overview path='/' locations={locations} />
+              <Trends path='/trends' dataForWeek={dataForWeek} />
+            </Router>
           </React.Fragment>
         ) : (
           <p>Please select a date range to view the report.</p>

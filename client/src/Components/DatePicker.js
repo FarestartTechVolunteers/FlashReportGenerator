@@ -49,13 +49,13 @@ const DatePicker = ({ activeWeek, onSetWeek }) => {
   };
 
   return (
-    <div className='bg-light-gray'>
+    <div className='bg-light-gray pa2'>
       <div>
         {!isEmpty(activeWeek) ? (
           <React.Fragment>
-            {moment(activeWeek[0]).format("LL")} – {moment(activeWeek[6]).format("LL")}
-            <button type='button' onClick={() => setPickerVisibility(true)}>
-              Change
+            <span className='mr3'>{moment(activeWeek[0]).format("LL")} – {moment(activeWeek[6]).format("LL")}</span>
+            <button type='button' onClick={() => setPickerVisibility(!isPickerVisible)}>
+              {isPickerVisible ? 'Cancel' : 'Change'}
             </button>
           </React.Fragment>
         ) : (
@@ -71,7 +71,6 @@ const DatePicker = ({ activeWeek, onSetWeek }) => {
         <div className='pa3'>
           <DayPicker
             selectedDays={activeWeek}
-            showWeekNumbers
             showOutsideDays
             modifiers={modifiers}
             onDayClick={handleDayChange}

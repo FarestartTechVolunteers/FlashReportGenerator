@@ -27,12 +27,21 @@ const transform = response => {
   };
 };
 
-async function fetchDataForDays(days) {
-  const res = await axios.get('/api/getData', {
-    startDate: '2019-03-07',
-    range: 14
-  })
-  return transform(res.data);
+async function fetchData(firstDay) {
+  // TODO: clean this up
+  const startDate = moment(firstDay).format('MM-DD-YYYY')
+  const previousMonday = moment(firstDay).subtract(7, 'days').format('MM-DD-YYYY')
+
+  const res1 = await axios.get('/api/getData', { params: { startDate: previousMonday, range: 7 } })
+  const res2 = await axios.get('/api/getData', { params: { startDate, range: 7 } })
+
+  const transformed1 = transform(res1.data)
+  const transformed2 = transform(res2.data)
+
+  return {
+    locations: transformed1.locations.concat(transformed2.locations),
+    data: transformed1.data.concat(transformed2.data)
+  }
 }
 
-export default fetchDataForDays;
+export default fetchData
