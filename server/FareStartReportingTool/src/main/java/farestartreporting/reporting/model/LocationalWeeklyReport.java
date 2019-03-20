@@ -1,7 +1,7 @@
 package farestartreporting.reporting.model;
 
 import farestartreporting.dataRetriever.BusinessLocationRetrival;
-import farestartreporting.dataRetriever.RetrieveInWeeklyBatchCallable;
+import farestartreporting.dataRetriever.RetrieveDailyCallable;
 import farestartreporting.responseModel.DailyData;
 
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import static farestartreporting.reporting.model.LocationsOfInterest.interestedInformation;
+import static farestartreporting.utils.ConcurrencyUtils.makeCompletableFuture;
 
 public class LocationalWeeklyReport {
     public String name;
@@ -58,7 +59,7 @@ public class LocationalWeeklyReport {
         for (int i = 0; i < dateRange; i++) {
             startDate = simpleDateFormat.format(calendar.getTime());
             System.out.println("start date used for query: " + startDate);
-            Callable<DailyData> reportWorker = new RetrieveInWeeklyBatchCallable(retreiver, startDate, name, interestedInformation);
+            Callable<DailyData> reportWorker = new RetrieveDailyCallable(retreiver, startDate, name, interestedInformation);
             Future<DailyData> report = executor.submit(reportWorker);
             CompletableFuture<DailyData> completableFutureReport = makeCompletableFuture(report);
             futuresList.add(completableFutureReport);
@@ -74,13 +75,4 @@ public class LocationalWeeklyReport {
         this.data = fetchedData;
     }
 
-    public static <T> CompletableFuture<T> makeCompletableFuture(Future<T> future) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
 }
