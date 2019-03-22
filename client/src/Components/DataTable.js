@@ -103,6 +103,11 @@ const TotalCell = ({ change=false, value }) => {
   )
 }
 
+const countForLocation = (location, day) => {
+  // TODO: this should toggle on business logic that maxx will specify
+  return day.guestCount || day.checkCount
+}
+
 const LocationInfoRows = ({ location }) => {
   return (
     <React.Fragment>
@@ -128,9 +133,9 @@ const LocationInfoRows = ({ location }) => {
         <Td className='bg-white'></Td>
         <Td className='b'>Count</Td>
         {thisWeekDays(location).map((day, index) => (
-          <Td key={index} numeric>{round(day.guestCount || day.checkCount, 2)}</Td>
+          <Td key={index} numeric>{round(countForLocation(location, day), 2)}</Td>
         ))}
-        <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + day.netSales, 0), 2)} />
+        <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + countForLocation(location, day), 0), 2)} />
       </tr>
       <tr>
         <Td></Td>
