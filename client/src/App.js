@@ -11,7 +11,7 @@ import CompanyChart from "./Components/CompanyChart";
 
 import "tachyons/css/tachyons.css";
 
-const Overview = ({ locations }) => <DataTable locations={locations} />
+const Overview = ({ locations, startDate }) => <DataTable locations={locations} startDate={startDate} />
 
 const Trends = ({ dataForWeek }) => (
   <React.Fragment>
@@ -23,18 +23,20 @@ const Trends = ({ dataForWeek }) => (
 class App extends Component {
   state = {
     activeWeek: [], // 7 date objects
-    dataForWeek: {}
+    dataForWeek: {},
+    isLoading: false
   };
 
   handleSetWeek = async (activeWeek) => {
-    this.setState({ activeWeek });
+    this.setState({ isLoading: true, activeWeek });
     const dataForWeek = await fetchDataForWeek(activeWeek[0]);
-    this.setState({ dataForWeek });
+    this.setState({ isLoading: false, dataForWeek });
   };
 
   render() {
-    const { activeWeek, dataForWeek } = this.state;
+    const { activeWeek, dataForWeek, isLoading } = this.state;
     const { locations } = dataForWeek
+    const startDate = activeWeek[0]
 
     return (
       <div className='mw8 center bg-white pa3'>
@@ -47,17 +49,21 @@ class App extends Component {
           </div>
         </div>
 
-        {!isEmpty(dataForWeek) ? (
-          <React.Fragment>
-            <Nav />
-
-            <Router>
-              <Overview path='/' locations={locations} />
-              <Trends path='/trends' dataForWeek={dataForWeek} />
-            </Router>
-          </React.Fragment>
+        {isLoading ? (
+          <React.Fragment>loading...</React.Fragment>
         ) : (
-          <p>Please select a date range to view the report.</p>
+          !isEmpty(dataForWeek) ? (
+            <React.Fragment>
+              <Nav />
+
+              <Router>
+                <Overview path='/' locations={locations} startDate={startDate} />
+                <Trends path='/trends' dataForWeek={dataForWeek} />
+              </Router>
+            </React.Fragment>
+          ) : (
+            <p>Please select a date range to view the report.</p>
+          )
         )}
       </div>
     );
