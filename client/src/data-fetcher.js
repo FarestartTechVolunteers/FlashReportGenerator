@@ -2,7 +2,7 @@ import moment from "moment";
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://weeklyreport-env.b9fv3mafzd.us-west-2.elasticbeanstalk.com/'
+  baseURL: ''
 })
 
 const transform = response => {
