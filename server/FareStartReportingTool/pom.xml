@@ -100,6 +100,49 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.7.5</version>
+
+                <configuration>
+                    <workingDirectory>${basedir}/../../client/</workingDirectory>
+                    <!-- Unable to set install directory in the client directory due to the plugin conducting a poor check -->
+                    <installDirectory>${basedir}/target/</installDirectory>
+
+                    <!-- nodeJS LTS version -->
+                    <nodeVersion>v10.15.3</nodeVersion>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <!-- optional: default phase is "generate-resources" -->
+                        <phase>generate-resources</phase>
+
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>compile frontend code</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
         </plugins>
     </build>
 
