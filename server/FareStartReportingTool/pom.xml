@@ -147,6 +147,24 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>2.0.7</version>
+                <configuration>
+                    <appName>farestart-flash</appName>
+
+                    <includeTarget>false</includeTarget>
+                    <includes>
+                        <include>target/${project.build.finalName}.war</include>
+                    </includes>
+
+                    <processTypes>
+                        <web>java -jar target/${project.build.finalName}.war --server.port=$PORT</web>
+                    </processTypes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
