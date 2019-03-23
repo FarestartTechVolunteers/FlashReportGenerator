@@ -16,6 +16,29 @@ FlashReportGenerator
  
 3. Navigate to <a href="http://localhost:5000" target="_blank">Application UI</a>
 
+## Development
+### Development / Build Tools:
+ - OpenJDK 1.8+
+ - Maven 3.x
+ - Git CLI
+
+### Setup & Build
+1. Fork the repo 
+2. Clone the forked repo to your computer
+```git clone https://github.com/<YOUR_GIT_REPO_PREFIX>/FlashReportGenerator.git```
+3. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
+4. Execute ```mvn package``` (this automatically download node & npm for compilling front-end codes)
+
+### Execution
+1. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
+2. Execute ```java -jar ./target/FareStartReportingTool-0.1.war```
+
+### Deployment
+1. Obtain permission as collaborator to project Heroku account.
+2. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
+3. Execute ```mvn clean heroku:deploy```
+
+---
 
 ## Backend Demo
 ```
