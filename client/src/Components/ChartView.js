@@ -7,6 +7,7 @@ class ChartView extends Component {
     super(props);
     this.state = {
       totalCompanySales: "Loading",
+      totalCompanySalesByWeek: [],
       salesData: []
     }
   }
@@ -15,6 +16,7 @@ class ChartView extends Component {
     console.log("dataForWeek", this.props.data);
     this.getSalesTotal(this.props.data);
     this.getCompanySalesTotal(this.props.data);
+    this.getCompanySalesWeeklyTotal(this.props.data);
   };
 
   fetchPreviousWeeks = num => {
@@ -28,10 +30,46 @@ class ChartView extends Component {
     // weeksData.forEach(getSalesTotal)
   };
 
-  getCompanySalesTotal = weeksData => {
-    console.log("getCompanySalesTotal");
-    console.log("weeksData");
+  getCompanySalesWeeklyTotal = weeksData => {
     console.log(weeksData);
+
+    let salesDataByDate = weeksData.data;
+    console.log("salesDataByDate");
+    console.log(salesDataByDate);
+    let salesWeekly = [];
+    for (let i = 0; i < salesDataByDate.length; i++) {
+      let weekNumber = Math.floor(i/7.0) + 1;
+      if (salesWeekly.length < weekNumber) {
+        salesWeekly.push([weekNumber, 0]);
+      }
+
+      let dailyCompanySales = 0;
+      salesDataByDate[i].locations.forEach(location => {
+        dailyCompanySales += location.netSales;
+      });
+      salesWeekly[weekNumber - 1][1] += dailyCompanySales;
+    }
+
+    let totalCompanySales = 0;
+    salesWeekly.forEach(week => {
+      totalCompanySales += week[1];
+    });
+
+    let salesDataGraphPrefix = [
+      ["x", "Sales"],
+      [0, totalCompanySales]
+    ]
+    let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
+
+    console.log(salesGraphDataArray);
+
+    this.setState({
+      totalCompanySalesByWeek: salesGraphDataArray
+    });
+  };
+
+  getCompanySalesTotal = weeksData => {
+
     let totalCompanySales = 0;
 
     weeksData.locations.forEach(location => {
@@ -41,7 +79,7 @@ class ChartView extends Component {
     });
 
     this.setState({
-      totalCompanySales: "$" + totalCompanySales.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+      totalCompanySales: this.toDollarString(totalCompanySales)
     });
   }
 
@@ -66,6 +104,10 @@ class ChartView extends Component {
     return salesData;
   };
 
+  toDollarString = dollarValue => {
+    return ("$" + dollarValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+  };
+
   render() {
     return (
       <div>
@@ -75,8 +117,8 @@ class ChartView extends Component {
           height={"400px"}
           chartType="LineChart"
           loader={<div>Loading Chart</div>}
-          //data={salesData}
-          data={[
+          data={this.state.totalCompanySalesByWeek}
+          /*data={[
             ["x", "Sales"],
             [0, total],
             [1, 10],
@@ -84,7 +126,7 @@ class ChartView extends Component {
             [3, 17],
             [4, 18],
             [5, 9]
-          ]}
+          ]}*/
           options={{
             chart: { title: "Total Company Sales" },
             hAxis: {
