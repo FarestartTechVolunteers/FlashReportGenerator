@@ -3,9 +3,18 @@ import Chart from "react-google-charts";
 let total = 0;
 let salesData = [];
 class ChartView extends Component {
-  componentDidUpdate = () => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      totalCompanySales: "Loading",
+      salesData: []
+    }
+  }
+
+  componentDidMount = () => {
     console.log("dataForWeek", this.props.data);
     this.getSalesTotal(this.props.data);
+    this.getCompanySalesTotal(this.props.data);
   };
 
   fetchPreviousWeeks = num => {
@@ -18,6 +27,23 @@ class ChartView extends Component {
     // create object that looks like {[["x", "Sales"], [0, sales],[1, sales],[2, sales]]}
     // weeksData.forEach(getSalesTotal)
   };
+
+  getCompanySalesTotal = weeksData => {
+    console.log("getCompanySalesTotal");
+    console.log("weeksData");
+    console.log(weeksData);
+    let totalCompanySales = 0;
+
+    weeksData.locations.forEach(location => {
+      location.days.forEach(day => {
+        totalCompanySales += day.netSales;
+      });
+    });
+
+    this.setState({
+      totalCompanySales: "$" + totalCompanySales.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    });
+  }
 
   getSalesTotal = weekData => {
     if (!data || !data.data) {
@@ -70,7 +96,7 @@ class ChartView extends Component {
           }}
           rootProps={{ "data-testid": "1" }}
         />
-        <h2>Total Sales: {total}</h2>
+        <h2>Total Sales: {this.state.totalCompanySales}</h2>
         <h2>Sales Data: {salesData}</h2>
       </div>
     );
