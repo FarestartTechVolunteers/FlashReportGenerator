@@ -8,14 +8,15 @@ class ChartView extends Component {
     this.state = {
       totalCompanySales: "Loading",
       totalCompanySalesByWeek: [],
+      salesDataByLocationByWeek: [],
       salesData: []
     }
   }
 
   componentDidMount = () => {
     console.log("dataForWeek", this.props.data);
-    this.getSalesTotal(this.props.data);
     this.getCompanySalesWeeklyTotal(this.props.data);
+    this.getSalesDataByLocationByWeek(this.props.data);
   };
 
   fetchPreviousWeeks = num => {
@@ -30,11 +31,7 @@ class ChartView extends Component {
   };
 
   getCompanySalesWeeklyTotal = weeksData => {
-    console.log(weeksData);
-
     let salesDataByDate = weeksData.data;
-    console.log("salesDataByDate");
-    console.log(salesDataByDate);
     let salesWeekly = [];
     for (let i = 0; i < salesDataByDate.length; i++) {
       let weekNumber = Math.floor(i/7.0) + 1;
@@ -68,25 +65,48 @@ class ChartView extends Component {
     });
   };
 
-  getSalesTotal = weekData => {
-    if (!data || !data.data) {
-      return;
-    }
-    let total = 0;
-    const { data } = weekData.data;
-    console.log("WOKRING");
-    data.data.forEach(day => {
-      //   day.locations; // [{ name: "Maslows", netSales: 8419, budget: }]
-      day.locations.forEach(location => {
-        console.log("location", location);
-        total += location.netSales;
-        console.log("Total", total);
-      });
-    });
-    // push sales number into salesData
+  getSalesDataByLocationByWeek = weeksData => {
+    console.log("getSalesDataByLocationByWeek");
+    console.log(weeksData);
 
-    salesData.push([1, total]);
-    return salesData;
+    // ['Location', { v: 10000, f: '$10,000' }, { v: 10000, f: '$10,000' }]
+
+    let perLocationSalesGraphData = [];
+    let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
+
+    weeksData.locations.forEach(location => {
+      let locationDataRow = [];
+      let locationTotal = 0;  
+
+      for (let i = 0; i < location.days.length; i++) {
+        let weekNumber = Math.floor(i/7.0) + 1;
+        if (locationDataRow.length < weekNumber) {
+          locationDataRow.push({v: 0, f: '$0'});
+
+          if (locationSalesTableHeader.length - 1 < weekNumber) {
+            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)});
+          }
+        }
+        locationTotal += location.days[i].netSales;
+        locationDataRow[weekNumber - 1].v += location.days[i].netSales;
+        locationDataRow[weekNumber - 1].f = this.toDollarString(locationDataRow[weekNumber - 1].v);
+      }
+
+      locationDataRow.unshift(location.name);
+      locationDataRow.push({v: locationTotal, f: this.toDollarString(locationTotal)});
+
+      perLocationSalesGraphData.push(locationDataRow);
+    });
+
+    locationSalesTableHeader.push({ type: 'number', label: 'Total' });
+
+    perLocationSalesGraphData.unshift(locationSalesTableHeader);
+
+    console.log(perLocationSalesGraphData);
+
+    this.setState({
+      salesDataByLocationByWeek: perLocationSalesGraphData
+    });
   };
 
   toDollarString = dollarValue => {
@@ -115,7 +135,18 @@ class ChartView extends Component {
           rootProps={{ "data-testid": "1" }}
         />
         <h2>Total Sales: {this.state.totalCompanySales}</h2>
-        <h2>Sales Data: {salesData}</h2>
+        <h2>Sales Data Table: {salesData}</h2>
+        <Chart
+          width={'500px'}
+          height={'300px'}
+          chartType="Table"
+          loader={<div>Loading Chart</div>}
+          data={this.state.salesDataByLocationByWeek}
+          options={{
+            showRowNumber: false,
+          }}
+          rootProps={{ 'data-testid': '1' }}
+        />
       </div>
     );
   }
