@@ -15,7 +15,6 @@ class ChartView extends Component {
   componentDidMount = () => {
     console.log("dataForWeek", this.props.data);
     this.getSalesTotal(this.props.data);
-    this.getCompanySalesTotal(this.props.data);
     this.getCompanySalesWeeklyTotal(this.props.data);
   };
 
@@ -64,24 +63,10 @@ class ChartView extends Component {
     console.log(salesGraphDataArray);
 
     this.setState({
-      totalCompanySalesByWeek: salesGraphDataArray
-    });
-  };
-
-  getCompanySalesTotal = weeksData => {
-
-    let totalCompanySales = 0;
-
-    weeksData.locations.forEach(location => {
-      location.days.forEach(day => {
-        totalCompanySales += day.netSales;
-      });
-    });
-
-    this.setState({
+      totalCompanySalesByWeek: salesGraphDataArray,
       totalCompanySales: this.toDollarString(totalCompanySales)
     });
-  }
+  };
 
   getSalesTotal = weekData => {
     if (!data || !data.data) {
@@ -118,15 +103,6 @@ class ChartView extends Component {
           chartType="LineChart"
           loader={<div>Loading Chart</div>}
           data={this.state.totalCompanySalesByWeek}
-          /*data={[
-            ["x", "Sales"],
-            [0, total],
-            [1, 10],
-            [2, 23],
-            [3, 17],
-            [4, 18],
-            [5, 9]
-          ]}*/
           options={{
             chart: { title: "Total Company Sales" },
             hAxis: {
