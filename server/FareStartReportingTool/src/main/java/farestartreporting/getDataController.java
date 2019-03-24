@@ -41,14 +41,16 @@ public class getDataController {
     @CrossOrigin
     @RequestMapping(value = "/api/getData", method = RequestMethod.GET, produces = "application/json")
     public BusinessResponse getData(@RequestParam String startDate, @RequestParam(required = true, defaultValue = "1") String range) throws IOException, ParseException, ExecutionException, InterruptedException {
+        
+        int MAX_RANGE_IN_WEEKS = 6;
 
         int dateRange = Integer.valueOf(range);
         if (dateRange < 0) {
             dateRange = 1;
         }
 
-        if (dateRange > 7) {
-            dateRange = 7;
+        if (dateRange > MAX_RANGE_IN_WEEKS * 7) {
+            dateRange = MAX_RANGE_IN_WEEKS * 7;
         }
 
         return getWeeklyHelper(startDate, dateRange);

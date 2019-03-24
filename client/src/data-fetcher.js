@@ -33,10 +33,11 @@ const transform = response => {
 
 async function fetchData(firstDay) {
   // TODO: clean this up
+  const numberOfWeeksToLookBehind = 3;
   const startDate = moment(firstDay).format('MM-DD-YYYY')
-  const previousMonday = moment(firstDay).subtract(7, 'days').format('MM-DD-YYYY')
+  const previousMonday = moment(firstDay).subtract(numberOfWeeksToLookBehind * 7, 'days').format('MM-DD-YYYY')
 
-  const res1 = await api.get('/api/getData', { params: { startDate: previousMonday, range: 7 } })
+  const res1 = await api.get('/api/getData', { params: { startDate: previousMonday, range: numberOfWeeksToLookBehind * 7 } })
   const res2 = await api.get('/api/getData', { params: { startDate, range: 7 } })
 
   const transformed1 = transform(res1.data)
