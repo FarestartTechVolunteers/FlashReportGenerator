@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import Chart from "react-google-charts";
+
+import CompanyChart from "./CompanyChart";
+
+
 let total = 0;
 let salesData = [];
 class ChartView extends Component {
@@ -9,12 +13,12 @@ class ChartView extends Component {
       totalCompanySales: "Loading",
       totalCompanySalesByWeek: [],
       salesDataByLocationByWeek: [],
+      companyPerWeekSalesGraphData: [],
       salesData: []
     }
   }
 
   componentDidMount = () => {
-    console.log("dataForWeek", this.props.data);
     this.getCompanySalesWeeklyTotal(this.props.data);
     this.getSalesDataByLocationByWeek(this.props.data);
   };
@@ -53,12 +57,9 @@ class ChartView extends Component {
 
     let salesDataGraphPrefix = [
       ["x", "Sales"],
-      [0, totalCompanySales]
     ]
     let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
-
-    console.log(salesGraphDataArray);
-
+    
     this.setState({
       totalCompanySalesByWeek: salesGraphDataArray,
       totalCompanySales: this.toDollarString(totalCompanySales)
@@ -102,13 +103,40 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
+    console.log("perLocationSalesGraphData");
     console.log(perLocationSalesGraphData);
 
+    // Convert table gragh data to line graph format
+       let companyPerWeekSalesGraphData = [];
+
+    // i = 1 & j = 1 to discard the unwanted line graph header data
+    for (let i = 1; i < perLocationSalesGraphData.length; i++) {
+      let companyName = perLocationSalesGraphData[i][0];
+      let graphData = [];
+      let locationTotalSales = 0;
+
+      // .length - 1 to remove table graph's "total" calue
+      for (let j = 1; j < perLocationSalesGraphData[i].length - 1; j++) {
+        graphData.push([j, perLocationSalesGraphData[i][j].v]);
+        locationTotalSales += perLocationSalesGraphData[i][j].v;
+      }
+
+      graphData.unshift(["x", "Sales"]);
+      
+      companyPerWeekSalesGraphData.push({
+        "name": companyName,
+        "data": graphData
+      });
+    }
+    console.log(companyPerWeekSalesGraphData);
+
     this.setState({
-      salesDataByLocationByWeek: perLocationSalesGraphData
+      salesDataByLocationByWeek: perLocationSalesGraphData,
+      companyPerWeekSalesGraphData: companyPerWeekSalesGraphData
     });
   };
 
+  
   toDollarString = dollarValue => {
     return ("$" + dollarValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
   };
@@ -147,6 +175,12 @@ class ChartView extends Component {
           }}
           rootProps={{ 'data-testid': '1' }}
         />
+        <h2>Per Location Graph</h2>
+        {this.state.companyPerWeekSalesGraphData.map(
+          function(companyGraphData, index){
+                    return <CompanyChart key={index} name={companyGraphData.name} graphData={companyGraphData.data} /> ;
+                  })
+        }
       </div>
     );
   }

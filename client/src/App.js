@@ -16,7 +16,6 @@ const Overview = ({ locations, startDate }) => <DataTable locations={locations} 
 const Trends = ({ dataForWeek }) => (
   <React.Fragment>
     <ChartView data={dataForWeek} />
-    <CompanyChart data={dataForWeek} />
   </React.Fragment>
 )
 
