@@ -38,8 +38,8 @@ class App extends Component {
     const startDate = activeWeek[0]
 
     return (
-      <div className='mw8 center bg-white pa3'>
-        <div className='flex flex-row items-baseline justify-between'>
+      <div className='mw9 center bg-white pa3'>
+        <div className='flex flex-row items-baseline justify-between content-center'>
           <div className='flex-0'>
             <h1>FareStart: Flash Report</h1>
           </div>

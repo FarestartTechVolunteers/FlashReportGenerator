@@ -10,16 +10,15 @@ class CompanyChart extends Component {
 
   render() {
     return (
-      <div>
-        <p>{this.props.name}</p>
         <Chart
-          width={"600px"}
+          width={"100%"}
           height={"400px"}
           chartType="LineChart"
           loader={<div>Loading Chart</div>}
           data={this.props.graphData}
           options={{
-            chart: { title: "Total Company Sales" },
+            title: this.props.name + " Sales",
+            legend: "none",
             hAxis: {
               title: "Weeks"
             },
@@ -29,7 +28,6 @@ class CompanyChart extends Component {
           }}
           rootProps={{ "data-testid": "1" }}
         />
-    </div>
     );
   }
 }

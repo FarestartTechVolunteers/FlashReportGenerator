@@ -144,43 +144,57 @@ class ChartView extends Component {
   render() {
     return (
       <div>
-        <h1>Trends</h1>
-        <Chart
-          width={"600px"}
-          height={"400px"}
-          chartType="LineChart"
-          loader={<div>Loading Chart</div>}
-          data={this.state.totalCompanySalesByWeek}
-          options={{
-            chart: { title: "Total Company Sales" },
-            hAxis: {
-              title: "Weeks"
-            },
-            vAxis: {
-              title: "Sales Dollars"
-            }
-          }}
-          rootProps={{ "data-testid": "1" }}
-        />
         <h2>Total Sales: {this.state.totalCompanySales}</h2>
-        <h2>Sales Data Table: {salesData}</h2>
-        <Chart
-          width={'500px'}
-          height={'300px'}
-          chartType="Table"
-          loader={<div>Loading Chart</div>}
-          data={this.state.salesDataByLocationByWeek}
-          options={{
-            showRowNumber: false,
-          }}
-          rootProps={{ 'data-testid': '1' }}
-        />
+        <div className='flex flex-row items-center justify-around'>
+          <div className='flex-0 outline'>
+            <Chart
+              width={'500px'}
+              height={'100%'}
+              chartType="Table"
+              loader={<div>Loading Chart</div>}
+              data={this.state.salesDataByLocationByWeek}
+              options={{
+                showRowNumber: false,
+              }}
+              rootProps={{ 'data-testid': '1' }}
+            />
+          </div>
+          <div className='flex-0'>
+            <Chart
+              width={"600px"}
+              height={"400px"}
+              chartType="LineChart"
+              loader={<div>Loading Chart</div>}
+              data={this.state.totalCompanySalesByWeek}
+              options={{
+                title: "Total Company Sales: " + this.state.totalCompanySales,
+                legend: "none",
+                hAxis: {
+                  title: "Weeks"
+                },
+                vAxis: {
+                  title: "Sales Dollars"
+                }
+              }}
+              rootProps={{ "data-testid": "1" }}
+            />
+          </div>
+        </div>
+
+
+
         <h2>Per Location Graph</h2>
-        {this.state.companyPerWeekSalesGraphData.map(
-          function(companyGraphData, index){
-                    return <CompanyChart key={index} name={companyGraphData.name} graphData={companyGraphData.data} /> ;
-                  })
-        }
+        <div class="flex flex-wrap justify-around outline">
+          {this.state.companyPerWeekSalesGraphData.map(
+            function(companyGraphData, index){
+                      return (
+                        <div class="w-33 pa0 mr0">
+                          <CompanyChart key={index} name={companyGraphData.name} graphData={companyGraphData.data} />
+                        </div>
+                      );
+                    })
+          }
+        </div>
       </div>
     );
   }

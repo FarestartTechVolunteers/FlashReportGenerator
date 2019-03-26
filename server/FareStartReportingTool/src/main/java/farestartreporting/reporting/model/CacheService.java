@@ -16,7 +16,8 @@ public class CacheService {
             .maximumSize(1000)
             .expireAfterAccess(24, TimeUnit.HOURS)
             .build(
-                    new CacheLoader<String, BusinessReport>() {
+                    new CacheLoader<String, BusinessReport>()
+                    {
                         public BusinessReport load(String date) throws InterruptedException, ExecutionException, IOException {
                             return new BusinessReport(date);
                         }
