@@ -148,7 +148,7 @@ class ChartView extends Component {
         <div className='flex flex-row items-center justify-around'>
           <div className='flex-0 outline'>
             <Chart
-              width={'500px'}
+              width={'100%'}
               height={'100%'}
               chartType="Table"
               loader={<div>Loading Chart</div>}
