@@ -42,5 +42,6 @@ public class BusinessReport {
 
         this.date = date;
         this.locations = locations;
+        executor.shutdown();
     }
 }
