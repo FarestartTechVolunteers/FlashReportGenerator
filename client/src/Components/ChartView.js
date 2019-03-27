@@ -67,10 +67,6 @@ class ChartView extends Component {
   };
 
   getSalesDataByLocationByWeek = weeksData => {
-    console.log("getSalesDataByLocationByWeek");
-    console.log(weeksData);
-
-    // ['Location', { v: 10000, f: '$10,000' }, { v: 10000, f: '$10,000' }]
 
     let perLocationSalesGraphData = [];
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
@@ -103,9 +99,6 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
-    console.log("perLocationSalesGraphData");
-    console.log(perLocationSalesGraphData);
-
     // Convert table gragh data to line graph format
        let companyPerWeekSalesGraphData = [];
 
@@ -128,7 +121,6 @@ class ChartView extends Component {
         "data": graphData
       });
     }
-    console.log(companyPerWeekSalesGraphData);
 
     this.setState({
       salesDataByLocationByWeek: perLocationSalesGraphData,

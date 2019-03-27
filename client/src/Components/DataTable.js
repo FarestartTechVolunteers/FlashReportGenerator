@@ -3,11 +3,14 @@ import round from 'lodash/round'
 import isNil from 'lodash/isNil'
 import classNames from 'classnames'
 import moment from 'moment'
+import { LocationCountMapping } from '../Constants/LocationCountMapping.js'
 
-// TODO: fix this kludge of receiving 14 days in a row, change so that datatable receives primary week and comparison week
 const bothWeekDays = (location) => {
-  const firstHalf = location.days.slice(0, location.days.length / 2)
-  const secondHalf = location.days.slice(location.days.length / 2)
+  // We receieve 42 days of data in a row, we're interested in the last 14 days of the set, 
+  // splitting into first and second week's data
+
+  const firstHalf = location.days.slice(-14, -7);
+  const secondHalf = location.days.slice(-7);
 
   const firstHalfDays = {
     monday: firstHalf[0] || {},
@@ -71,8 +74,8 @@ const Td = ({ className, numeric=false, children, ...restProps }) => {
 const salesChangeForDay = (day, location, index) => {
   const lastNetSales = lastWeekDays(location)[index].netSales
 
-  if (day.netSales && lastNetSales) {
-    const change = day.netSales - lastNetSales
+  if (day.netSales && lastNetSales && lastNetSales !== 0) {
+    const change = Math.round((day.netSales - lastNetSales) / lastNetSales * 100.0);
     return change
   } else {
     return null
@@ -80,12 +83,14 @@ const salesChangeForDay = (day, location, index) => {
 }
 
 const countChangeForDay = (day, location, index) => {
-  const countKey = 'guestCount' // TODO: or checkCount, based on business logic to-be-defined by maxx
+  
+  let countKey = LocationCountMapping[location.name] || "guestCount";
+
   const count = day[countKey]
   const lastCount = (lastWeekDays(location)[index] || [])[countKey]
 
-  if (!isNil(count) && !isNil(lastCount)) {
-    const change = count - lastCount
+  if (!isNil(count) && !isNil(lastCount) && lastCount !== 0) {
+    const change = Math.round((count - lastCount) / lastCount * 100.0);
     return change
   } else {
     return null
@@ -94,7 +99,7 @@ const countChangeForDay = (day, location, index) => {
 
 const hueForChange = change => change > 0 ? 'bg-light-green' : (change < 0 ? 'bg-washed-red' : null)
 
-const TotalCell = ({ change=false, value }) => {
+const TotalCell = ({ change=false, value, }) => {
   const hue = change && hueForChange(value)
   return (
     <Td numeric className={`b ${hue}`}>
@@ -103,9 +108,19 @@ const TotalCell = ({ change=false, value }) => {
   )
 }
 
+const TotalCellPercentage =  ({ change=false, value, }) => {
+  const hue = change && hueForChange(value)
+  return (
+    <Td className={`b tr ${hue}`}>
+      {value}%
+    </Td>
+  )
+}
+
 const countForLocation = (location, day) => {
   // TODO: this should toggle on business logic that maxx will specify
-  return day.guestCount || day.checkCount
+  let countKey = LocationCountMapping[location.name] || "guestCount";
+  return day[countKey];
 }
 
 const LocationInfoRows = ({ location }) => {
@@ -125,9 +140,9 @@ const LocationInfoRows = ({ location }) => {
         {thisWeekDays(location).map((day, index) => {
           const change = salesChangeForDay(day, location, index)
           const hue = hueForChange(change)
-          return <Td key={index} className={hue} numeric>{round(change, 2)}</Td>
+          return <Td key={index} className={`tr ${hue}`}>{change} {change ? "%": ""}</Td>
         })}
-        <TotalCell change value={thisWeekDays(location).reduce((acc, day, index) => acc + salesChangeForDay(day, location, index), 0)} />
+        <TotalCellPercentage change value={thisWeekDays(location).reduce((acc, day, index) => acc + salesChangeForDay(day, location, index), 0)} />
       </tr>
       <tr>
         <Td className='bg-white'></Td>
@@ -143,9 +158,9 @@ const LocationInfoRows = ({ location }) => {
         {thisWeekDays(location).map((day, index) => {
           const change = countChangeForDay(day, location, index)
           const hue = hueForChange(change)
-          return !isNil(change) ? <Td key={index} className={hue} numeric>{round(change, 2)}</Td> : <Td key={index} />
+          return !isNil(change) ? <Td key={index} className={`tr ${hue}`}>{change} {change ? "%": ""}</Td> : <Td key={index} />
         })}
-        <TotalCell change value={thisWeekDays(location).reduce((acc, day, index) => acc + countChangeForDay(day, location, index), 0)} />
+        <TotalCellPercentage change value={thisWeekDays(location).reduce((acc, day, index) => acc + countChangeForDay(day, location, index), 0)} />
       </tr>
     </React.Fragment>
   )
