@@ -4,6 +4,13 @@ import isNil from 'lodash/isNil'
 import classNames from 'classnames'
 import moment from 'moment'
 import { LocationCountMapping } from '../Constants/LocationCountMapping.js'
+import { LocationDisplay } from '../Constants/LocationDisplayTypeMapping.js'
+
+const NETSALES_VS_LAST_WEEK = "netsalesVsLastWeek";
+const COUNT = "count";
+const COUNT_VS_LAST_WEEK = "countVsLastWeek";
+const BUDGET = "budget";
+const NETSALES_VS_BUDGET = "netssalesVsBudget";
 
 const bothWeekDays = (location) => {
   // We receieve 42 days of data in a row, we're interested in the last 14 days of the set, 
@@ -30,9 +37,6 @@ const bothWeekDays = (location) => {
     saturday: secondHalf[5] || {},
     sunday: secondHalf[6] || {},
   }
-
-  console.log(secondHalfDays);
-
   return { firstHalfDays, secondHalfDays }
 }
 
@@ -179,7 +183,8 @@ const LocationInfoRows = ({ location }) => {
         ))}
         <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + day.netSales, 0), 2)} />
       </tr>
-      <tr>
+
+      <tr className={LocationDisplay[location.name][NETSALES_VS_LAST_WEEK] ? '' : 'dn'}>
         <Td></Td>
         <Td>vs LW</Td>
         {thisWeekDays(location).map((day, index) => {
@@ -189,7 +194,7 @@ const LocationInfoRows = ({ location }) => {
         })}
         <TotalCellPercentage change value={ salesChangeForWeek(location) } />
       </tr>
-      <tr>
+      <tr className={LocationDisplay[location.name][COUNT] ? '' : 'dn'}>
         <Td className='bg-white'></Td>
         <Td className='b'>Count</Td>
         {thisWeekDays(location).map((day, index) => (
@@ -198,7 +203,7 @@ const LocationInfoRows = ({ location }) => {
         <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + countForLocation(location, day), 0), 2)} />
       </tr>
 
-      <tr>
+      <tr className={LocationDisplay[location.name][COUNT_VS_LAST_WEEK] ? '' : 'dn'}>
         <Td></Td>
         <Td>vs LW</Td>
         {thisWeekDays(location).map((day, index) => {
@@ -208,7 +213,7 @@ const LocationInfoRows = ({ location }) => {
         })}
         <TotalCellPercentage change value={countChangeForWeek(location)} />
       </tr>
-      <tr>
+      <tr className={LocationDisplay[location.name][BUDGET] ? '' : 'dn'}>
         <Td></Td>
         <Td >Budget</Td>
         {thisWeekDays(location).map((day, index) => (
@@ -216,7 +221,7 @@ const LocationInfoRows = ({ location }) => {
         ))}
         <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + day.budget, 0), 2)} />
       </tr>
-      <tr>
+      <tr className={LocationDisplay[location.name][NETSALES_VS_BUDGET] ? '' : 'dn'}>
         <Td></Td>
         <Td>Sales vs Budget</Td>
         {thisWeekDays(location).map((day, index) => {
