@@ -20,6 +20,7 @@ public class HTTPGetter {
 
     public static final String AUTH_TOKEN = "d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6";
     public static final String USER_ID = "128537";
+    private static final String PERIOD_TYPE_ID = "0"; //day
     //    private AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config().setConnectionTtl(5000));
     private static AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config());
 
@@ -53,7 +54,7 @@ public class HTTPGetter {
 
     public static CompletableFuture<Response> getCheckCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
-        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/8";
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/" + PERIOD_TYPE_ID + "/8";
         CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("X-UserAuthToken", AUTH_TOKEN)
@@ -65,7 +66,7 @@ public class HTTPGetter {
 
     public static CompletableFuture<Response> getGuestCount(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
-        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/7";
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness+ "/" + PERIOD_TYPE_ID  + "/7";
 
         CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
                 .addHeader("Content-Type", "application/json")
@@ -78,7 +79,7 @@ public class HTTPGetter {
 
     public static CompletableFuture<Response> getNetSalesData(int locationGroupID, String dateOfBusiness) throws IOException {
         // For net sales
-        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness + "/1";
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness+ "/" + PERIOD_TYPE_ID  + "/1";
 
         CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
                 .addHeader("Content-Type", "application/json")
