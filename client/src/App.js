@@ -32,6 +32,10 @@ class App extends Component {
     this.setState({ isLoading: false, dataForWeek });
   };
 
+  componentDidMount() {
+    document.title = "FareStart: Flash Report";
+  }
+
   render() {
     const { activeWeek, dataForWeek, isLoading } = this.state;
     const { locations } = dataForWeek

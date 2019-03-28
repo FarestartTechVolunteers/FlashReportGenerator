@@ -8,7 +8,6 @@ import { LocationCountMapping } from '../Constants/LocationCountMapping.js'
 const bothWeekDays = (location) => {
   // We receieve 42 days of data in a row, we're interested in the last 14 days of the set, 
   // splitting into first and second week's data
-
   const firstHalf = location.days.slice(-14, -7);
   const secondHalf = location.days.slice(-7);
 
@@ -31,6 +30,8 @@ const bothWeekDays = (location) => {
     saturday: secondHalf[5] || {},
     sunday: secondHalf[6] || {},
   }
+
+  console.log(secondHalfDays);
 
   return { firstHalfDays, secondHalfDays }
 }
@@ -82,6 +83,16 @@ const salesChangeForDay = (day, location, index) => {
   }
 }
 
+const salesChangeForWeek = (location) => {
+  let thisWeekSalesTotal = thisWeekDays(location).reduce((acc, day) => acc + day.netSales, 0);
+  let lastWeekSalesTotal = lastWeekDays(location).reduce((acc, day) => acc + day.netSales, 0);
+
+  if (lastWeekSalesTotal === 0) {
+    return null;
+  }
+  return round((((thisWeekSalesTotal - lastWeekSalesTotal) / lastWeekSalesTotal) * 100), 0);
+}
+
 const countChangeForDay = (day, location, index) => {
   
   let countKey = LocationCountMapping[location.name] || "guestCount";
@@ -95,6 +106,40 @@ const countChangeForDay = (day, location, index) => {
   } else {
     return null
   }
+}
+
+const countChangeForWeek = (location) => {
+  let countKey = LocationCountMapping[location.name] || "guestCount";
+
+  let thisWeekCountTotal = thisWeekDays(location).reduce((acc, day) => acc + day[countKey], 0);
+  let lastWeekCountTotal = lastWeekDays(location).reduce((acc, day) => acc + day[countKey], 0);
+
+  if (lastWeekCountTotal === 0) {
+    return null;
+  }
+
+  return round((((thisWeekCountTotal - lastWeekCountTotal) / lastWeekCountTotal) * 100), 0);
+}
+
+const salesVsBudgetForDay = (day, location, index) => {
+  let daySales = day.netSales;
+  let dayBudget = day.budget;
+
+  if (dayBudget === 0) {
+    return null
+  }
+  return round((((daySales - dayBudget) / dayBudget) * 100), 0);
+}
+
+const salesVsBudgetForWeek = (location) => {
+  let thisWeekSalesTotal = thisWeekDays(location).reduce((acc, day) => acc + day.netSales, 0);
+  let thisWeekBudgetTotal = thisWeekDays(location).reduce((acc, day) => acc + day.budget, 0);
+
+  if (thisWeekBudgetTotal === 0) {
+    return null;
+  }
+
+  return round((((thisWeekSalesTotal - thisWeekBudgetTotal) / thisWeekBudgetTotal) * 100), 0);
 }
 
 const hueForChange = change => change > 0 ? 'bg-light-green' : (change < 0 ? 'bg-washed-red' : null)
@@ -112,7 +157,7 @@ const TotalCellPercentage =  ({ change=false, value, }) => {
   const hue = change && hueForChange(value)
   return (
     <Td className={`b tr ${hue}`}>
-      {value}%
+      {value}{value ? "%" : ""}
     </Td>
   )
 }
@@ -142,7 +187,7 @@ const LocationInfoRows = ({ location }) => {
           const hue = hueForChange(change)
           return <Td key={index} className={`tr ${hue}`}>{change} {change ? "%": ""}</Td>
         })}
-        <TotalCellPercentage change value={thisWeekDays(location).reduce((acc, day, index) => acc + salesChangeForDay(day, location, index), 0)} />
+        <TotalCellPercentage change value={ salesChangeForWeek(location) } />
       </tr>
       <tr>
         <Td className='bg-white'></Td>
@@ -152,6 +197,7 @@ const LocationInfoRows = ({ location }) => {
         ))}
         <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + countForLocation(location, day), 0), 2)} />
       </tr>
+
       <tr>
         <Td></Td>
         <Td>vs LW</Td>
@@ -160,7 +206,25 @@ const LocationInfoRows = ({ location }) => {
           const hue = hueForChange(change)
           return !isNil(change) ? <Td key={index} className={`tr ${hue}`}>{change} {change ? "%": ""}</Td> : <Td key={index} />
         })}
-        <TotalCellPercentage change value={thisWeekDays(location).reduce((acc, day, index) => acc + countChangeForDay(day, location, index), 0)} />
+        <TotalCellPercentage change value={countChangeForWeek(location)} />
+      </tr>
+      <tr>
+        <Td></Td>
+        <Td >Budget</Td>
+        {thisWeekDays(location).map((day, index) => (
+          <Td key={index} numeric>{round(day.budget, 2)}</Td>
+        ))}
+        <TotalCell value={round(thisWeekDays(location).reduce((acc, day) => acc + day.budget, 0), 2)} />
+      </tr>
+      <tr>
+        <Td></Td>
+        <Td>Sales vs Budget</Td>
+        {thisWeekDays(location).map((day, index) => {
+          const change = salesVsBudgetForDay(day, location, index)
+          const hue = hueForChange(change)
+          return !isNil(change) ? <Td key={index} className={`tr ${hue}`}>{change} {change ? "%": ""}</Td> : <Td key={index} />
+        })}
+        <TotalCellPercentage change value={salesVsBudgetForWeek(location)} />
       </tr>
     </React.Fragment>
   )
