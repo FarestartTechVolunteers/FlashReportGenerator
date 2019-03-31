@@ -130,7 +130,7 @@ class ChartView extends Component {
 
   
   toDollarString = dollarValue => {
-    return ("$" + dollarValue.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+    return ("$" + dollarValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')).slice(0, -3);
   };
 
   render() {
