@@ -13,13 +13,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+
 public class HTTPGetter {
 
-    public static final String AUTH_TOKEN = "d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6";
-    public static final String USER_ID = "128537";
+    private static final String AUTH_TOKEN = Optional.ofNullable(System.getProperty("ctuitToken"))
+            .orElse("d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6");
+    private static final String USER_ID = Optional.ofNullable(System.getProperty("ctuitUserId"))
+            .orElse("128537");
     private static final String PERIOD_TYPE_ID = "0"; //day
     //    private AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config().setConnectionTtl(5000));
     private static AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient(Dsl.config());
