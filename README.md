@@ -11,7 +11,7 @@ FlashReportGenerator
 
 2. OSX / Linux / Windows: Start the service using the following command (modify the filepath to suit):
   ```
-  java -jar <PATH>/<TO>/<DOWNLOADED/FareStartReportingTool-0.1.war
+  java -DctuitToken=“<CTUIT_TOKEN>” -DctuitUserId=“<CTUIT_USER_ID>” -jar <PATH>/<TO>/<DOWNLOADED>/FareStartReportingTool-0.1.war
   ```
  
 3. Navigate to <a href="http://localhost:5000" target="_blank">Application UI</a>
