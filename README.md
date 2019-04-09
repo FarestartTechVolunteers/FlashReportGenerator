@@ -28,6 +28,7 @@ FlashReportGenerator
 ```git clone https://github.com/<YOUR_GIT_REPO_PREFIX>/FlashReportGenerator.git```
 3. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
 4. Execute ```mvn package``` (this automatically download node & npm for compilling front-end codes)
+```If the build fails, go to ./FlashReportGenerator/client and run npm install```
 
 ### Execution
 1. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
@@ -36,7 +37,8 @@ FlashReportGenerator
 ### Deployment
 1. Obtain permission as collaborator to project Heroku account.
 2. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
-3. Execute ```mvn clean heroku:deploy```
+3. Edit 
+4. Execute ```mvn clean heroku:deploy```
 
 ---
 
