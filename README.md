@@ -21,6 +21,7 @@ FlashReportGenerator
  - OpenJDK 1.8+
  - Maven 3.x
  - Git CLI
+ - Heroku CLI
 
 ### Setup & Build
 1. Fork the repo 
@@ -28,17 +29,18 @@ FlashReportGenerator
 ```git clone https://github.com/<YOUR_GIT_REPO_PREFIX>/FlashReportGenerator.git```
 3. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
 4. Execute ```mvn package``` (this automatically download node & npm for compilling front-end codes)
-```If the build fails, go to ./FlashReportGenerator/client and run npm install```
+5. If the build failed, go to ./FlashReportGenerator/client and run ```npm install``` (TODO: FIX THIS)
 
 ### Execution
 1. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
 2. Execute ```java -jar ./target/FareStartReportingTool-0.1.war```
 
 ### Deployment
-1. Obtain permission as collaborator to project Heroku account.
+1. Obtain permission as collaborator to Farestart Heroku account. Login via Heroku CLI to that account. 
 2. Navigate to ./FlashReportGenerator/server/FareStartReportingTool/
-3. Edit 
-4. Execute ```mvn clean heroku:deploy```
+3. In pom.xml, find this line ```java -DctuitToken=“<CTUIT_TOKEN>” -DctuitUserId=“<CTUIT_USER_ID>” -jar <PATH>/<TO>/<DOWNLOADED>/FareStartReportingTool-0.1.war```
+4. Replace <CTUIT_TOKEN> and <CTUIT_USER_ID> with actual token/ids. 
+5. Execute ```mvn clean heroku:deploy```
 
 ---
 
