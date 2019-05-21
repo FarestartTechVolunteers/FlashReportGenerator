@@ -137,7 +137,7 @@ class ChartView extends Component {
     return (
       <div>
         <h2>Total Sales: {this.state.totalCompanySales}</h2>
-        <div className='flex flex-row items-center justify-around'>
+        <div className='flex flex-wrap items-center justify-around'>
           <div className='flex-0 outline'>
             <Chart
               width={'100%'}
