@@ -66,6 +66,11 @@ class ChartView extends Component {
     });
   };
 
+  /**
+   * Takes a set of six weeks worth of data and parses it for
+   * use in the main trends data table.
+   * @param weeksData
+   */
   getSalesDataByLocationByWeek = weeksData => {
 
     let perLocationSalesGraphData = [];
@@ -73,15 +78,24 @@ class ChartView extends Component {
 
     weeksData.locations.forEach(location => {
       let locationDataRow = [];
-      let locationTotal = 0;  
-
+      let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
         let weekNumber = Math.floor(i/7.0) + 1;
         if (locationDataRow.length < weekNumber) {
           locationDataRow.push({v: 0, f: '$0'});
 
+
           if (locationSalesTableHeader.length - 1 < weekNumber) {
-            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)});
+            let date = location.days[i].date.toString();
+            // Mon Apr 01 2019
+            // 012345678901234
+            let month = date.substring(4, 7);
+            let day = parseInt(date.substring(8, 10));
+            let endDay = day + 6;
+            // let year = parseInt(date.substring(11, 15));
+            let dateLabel = month + " " + day + "-" + endDay;
+            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)
+                  + "<br>" + dateLabel});
           }
         }
         locationTotal += location.days[i].netSales;
