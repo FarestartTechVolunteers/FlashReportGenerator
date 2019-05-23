@@ -35,22 +35,23 @@ class ChartView extends Component {
   };
 
   getCompanySalesWeeklyTotal = weeksData => {
-    let salesDataByDate = weeksData.data;
+    let salesDataByDate = weeksData.data; // see forEach(location ...
     let salesWeekly = [];
-    for (let i = 0; i < salesDataByDate.length; i++) {
+    for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
       let weekNumber = Math.floor(i/7.0) + 1;
-      if (salesWeekly.length < weekNumber) {
+      if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
         salesWeekly.push([weekNumber, 0]);
       }
 
       let dailyCompanySales = 0;
+      // saleDataByDate contains a locations field, each of which has a netSales field
       salesDataByDate[i].locations.forEach(location => {
         dailyCompanySales += location.netSales;
       });
       salesWeekly[weekNumber - 1][1] += dailyCompanySales;
     }
 
-    let totalCompanySales = 0;
+    let totalCompanySales = 0; // TODO: why have this outside the original loop?
     salesWeekly.forEach(week => {
       totalCompanySales += week[1];
     });
