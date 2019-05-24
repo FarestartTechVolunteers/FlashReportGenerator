@@ -33,7 +33,7 @@ class App extends Component {
       // below gets the date last year TODO: get Nth monday
     //let d = new Date(activeWeek[0].getTime());
     //const dataForWeek_LASTYEAR = await fetchDataForWeek(d.setUTCFullYear(d.getUTCFullYear() - 1));
-    this.setState({ isLoading: false, dataForWeek, dataForWeek_LASTYEAR});
+    this.setState({ isLoading: false, dataForWeek}); //, dataForWeek_LASTYEAR});
   };
 
   componentDidMount() {
