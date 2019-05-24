@@ -23,13 +23,17 @@ class App extends Component {
   state = {
     activeWeek: [], // 7 date objects
     dataForWeek: {},
+    dataForWeek_LASTYEAR: {},
     isLoading: false
   };
 
   handleSetWeek = async (activeWeek) => {
     this.setState({ isLoading: true, activeWeek });
     const dataForWeek = await fetchDataForWeek(activeWeek[0]);
-    this.setState({ isLoading: false, dataForWeek });
+      // below gets the date last year TODO: get Nth monday
+    //let d = new Date(activeWeek[0].getTime());
+    const dataForWeek_LASTYEAR = await fetchDataForWeek(d.setUTCFullYear(d.getUTCFullYear() - 1));
+    this.setState({ isLoading: false, dataForWeek, dataForWeek_LASTYEAR});
   };
 
   componentDidMount() {
@@ -37,9 +41,11 @@ class App extends Component {
   }
 
   render() {
-    const { activeWeek, dataForWeek, isLoading } = this.state;
+    const { activeWeek, dataForWeek, dataForWeek_LASTYEAR, isLoading } = this.state;
     const { locations } = dataForWeek
     const startDate = activeWeek[0]
+
+    console.log([dataForWeek, dataForWeek_LASTYEAR]);
 
     return (
       <div className='mw9 center bg-white pa3'>
@@ -61,7 +67,7 @@ class App extends Component {
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={dataForWeek} />
+                <Trends path='/trends' dataForWeek={[dataForWeek_LASTYEAR, dataForWeek]} />
               </Router>
             </React.Fragment>
           ) : (
