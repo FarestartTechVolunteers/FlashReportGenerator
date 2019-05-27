@@ -13,27 +13,29 @@ import "tachyons/css/tachyons.css";
 
 const Overview = ({ locations, startDate }) => <DataTable locations={locations} startDate={startDate} />
 
-const Trends = ({ dataForWeek }) => (
-  <React.Fragment>
-    <ChartView data={dataForWeek} />
-  </React.Fragment>
-)
+const Trends = (props) => {
+  return (
+      <React.Fragment>
+        <ChartView dataForWeek={props.dataForWeek}/>
+      </React.Fragment>
+  );
+}
 
 class App extends Component {
   state = {
     activeWeek: [], // 7 date objects
     dataForWeek: {},
-    dataForWeek_LASTYEAR: {},
+    dataForWeekLastYear: {},
     isLoading: false
   };
 
   handleSetWeek = async (activeWeek) => {
     this.setState({ isLoading: true, activeWeek });
     const dataForWeek = await fetchDataForWeek(activeWeek[0]);
-      // below gets the date last year TODO: get Nth monday
-    //let d = new Date(activeWeek[0].getTime());
-    //const dataForWeek_LASTYEAR = await fetchDataForWeek(d.setUTCFullYear(d.getUTCFullYear() - 1));
-    this.setState({ isLoading: false, dataForWeek}); //, dataForWeek_LASTYEAR});
+    const lastYearActiveWeek = new Date(activeWeek[0]);
+    lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
+    const dataForWeekLastYear = await fetchDataForWeek(lastYearActiveWeek);
+    this.setState({ isLoading: false, dataForWeek: dataForWeek, dataForWeekLastYear: dataForWeekLastYear});
   };
 
   componentDidMount() {
@@ -41,11 +43,9 @@ class App extends Component {
   }
 
   render() {
-    const { activeWeek, dataForWeek, dataForWeek_LASTYEAR, isLoading } = this.state;
-    const { locations } = dataForWeek
-    const startDate = activeWeek[0]
-
-    console.log([dataForWeek, dataForWeek_LASTYEAR]);
+    const { activeWeek, dataForWeek, dataForWeekLastYear, isLoading } = this.state;
+    const { locations } = dataForWeek;
+    const startDate = activeWeek[0];
 
     return (
       <div className='mw9 center bg-white pa3'>
@@ -67,7 +67,7 @@ class App extends Component {
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={[dataForWeek_LASTYEAR, dataForWeek]} />
+                <Trends path='/trends' dataForWeek={[dataForWeek, dataForWeekLastYear]}/>
               </Router>
             </React.Fragment>
           ) : (

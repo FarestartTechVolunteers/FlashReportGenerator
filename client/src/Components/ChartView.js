@@ -19,8 +19,9 @@ class ChartView extends Component {
   }
 
   componentDidMount = () => {
-    this.getCompanySalesWeeklyTotal(this.props.data);
-    this.getSalesDataByLocationByWeek(this.props.data);
+    let data = this.props.dataForWeek;
+    this.getCompanySalesWeeklyTotal(data);
+    this.getSalesDataByLocationByWeek(data[0]);
   };
 
   fetchPreviousWeeks = num => {
@@ -35,32 +36,26 @@ class ChartView extends Component {
   };
 
   getCompanySalesWeeklyTotal = weeksData => {
-    let salesDataByDate = weeksData.data; // see forEach(location ...
-    let salesWeekly = [];
-    for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
-      let weekNumber = Math.floor(i/7.0) + 1;
-      if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
-        salesWeekly.push([weekNumber, 0]);
+    let salesWeekly = getWeeklySales(weeksData[0].data);
+    let totalCompanySales = getTotalSales(salesWeekly);
+    console.log(weeksData);
+    let salesDataGraphPrefix = [
+      ["x", "Sales of " + weeksData[0].data[0].date.getFullYear()],
+    ]
+    // Concats the other weekly sales so that we can graph other trends
+    for (let i = 1; i < weeksData.length; i++){
+      let otherSalesWeekly = getWeeklySales(weeksData[i].data);
+      for (let j = 0; j < salesWeekly.length; j++){
+        salesWeekly[j].push(otherSalesWeekly[j][1]);
       }
-
-      let dailyCompanySales = 0;
-      // saleDataByDate contains a locations field, each of which has a netSales field
-      salesDataByDate[i].locations.forEach(location => {
-        dailyCompanySales += location.netSales;
-      });
-      salesWeekly[weekNumber - 1][1] += dailyCompanySales;
+      salesDataGraphPrefix[0].push("Sales of " + weeksData[i].data[0].date.getFullYear());
     }
 
-    let totalCompanySales = 0; // TODO: why have this outside the original loop?
-    salesWeekly.forEach(week => {
-      totalCompanySales += week[1];
-    });
-
-    let salesDataGraphPrefix = [
-      ["x", "Sales"],
-    ]
     let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
-    
+    console.log(salesWeekly);
+    console.log(salesDataGraphPrefix);
+    console.log(salesGraphDataArray);
+    console.log(totalCompanySales);
     this.setState({
       totalCompanySalesByWeek: salesGraphDataArray,
       totalCompanySales: this.toDollarString(totalCompanySales)
@@ -122,6 +117,8 @@ class ChartView extends Component {
         "data": graphData
       });
     }
+    console.log(perLocationSalesGraphData);
+    console.log(companyPerWeekSalesGraphData);
 
     this.setState({
       salesDataByLocationByWeek: perLocationSalesGraphData,
@@ -191,6 +188,35 @@ class ChartView extends Component {
       </div>
     );
   }
+}
+////////////////////////////////////////////////////////////////
+////////////////////////Methods/////////////////////////////////
+////////////////////////////////////////////////////////////////
+function getWeeklySales(data) {
+  let salesDataByDate = data; // see forEach(location ...
+  let salesWeekly = [];
+  for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
+    let weekNumber = Math.floor(i/7.0) + 1;
+    if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
+      salesWeekly.push([weekNumber, 0]);
+    }
+
+    let dailyCompanySales = 0;
+    // saleDataByDate contains a locations field, each of which has a netSales field
+    salesDataByDate[i].locations.forEach(location => {
+      dailyCompanySales += location.netSales;
+    });
+    salesWeekly[weekNumber - 1][1] += dailyCompanySales;
+  }
+  return salesWeekly;
+}
+
+function getTotalSales(salesWeekly){
+  let totalCompanySales = 0; // TODO: why have this outside the original loop?
+  salesWeekly.forEach(week => {
+    totalCompanySales += week[1];
+  });
+  return totalCompanySales;
 }
 
 export default ChartView;
