@@ -38,7 +38,6 @@ class ChartView extends Component {
   getCompanySalesWeeklyTotal = weeksData => {
     let salesWeekly = getWeeklySales(weeksData[0].data);
     let totalCompanySales = getTotalSales(salesWeekly);
-    console.log(weeksData);
     let salesDataGraphPrefix = [
       ["x", "Sales of " + weeksData[0].data[0].date.getFullYear()],
     ]
@@ -52,10 +51,6 @@ class ChartView extends Component {
     }
 
     let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
-    console.log(salesWeekly);
-    console.log(salesDataGraphPrefix);
-    console.log(salesGraphDataArray);
-    console.log(totalCompanySales);
     this.setState({
       totalCompanySalesByWeek: salesGraphDataArray,
       totalCompanySales: this.toDollarString(totalCompanySales)
@@ -117,8 +112,6 @@ class ChartView extends Component {
         "data": graphData
       });
     }
-    console.log(perLocationSalesGraphData);
-    console.log(companyPerWeekSalesGraphData);
 
     this.setState({
       salesDataByLocationByWeek: perLocationSalesGraphData,
