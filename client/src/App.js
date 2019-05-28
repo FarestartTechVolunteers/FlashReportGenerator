@@ -54,6 +54,17 @@ class App extends Component {
             <h1>FareStart: Flash Report</h1>
           </div>
           <div className='flex-0'>
+              <select onChange={this.handleSelectChange}>
+                  <option value="1">Sales</option>
+                  <option value="2">Cost</option>
+              </select>
+              <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+          </div>
+          <div className='flex-0'>
+              <select onChange={this.handleSelectChange}>
+                  <option value="1">Sales</option>
+                  <option value="2">Cost</option>
+              </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
           </div>
         </div>
