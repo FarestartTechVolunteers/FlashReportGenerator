@@ -99,11 +99,27 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
+
+    let totalByWeekRow = ["Totals By Week"];
+
+    for(let i = 1; i < perLocationSalesGraphData[i].length; i++) {
+      let sumForWeek = 0;
+      for(let j = 1; j < perLocationSalesGraphData.length; j++) {
+        console.log(perLocationSalesGraphData[j][i].v);
+        sumForWeek += perLocationSalesGraphData[j][i].v;
+      }
+      totalByWeekRow.push({v: sumForWeek, f: this.toDollarString(sumForWeek)});
+    }
+    totalByWeekRow.style = {font: bold};
+
+    perLocationSalesGraphData.push(totalByWeekRow);
+
     // Convert table gragh data to line graph format
-       let companyPerWeekSalesGraphData = [];
+    let companyPerWeekSalesGraphData = [];
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
-    for (let i = 1; i < perLocationSalesGraphData.length; i++) {
+    //.length -1 to not duplicate the top chart at the end.
+    for (let i = 1; i < perLocationSalesGraphData.length -1 ; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
       let locationTotalSales = 0;
