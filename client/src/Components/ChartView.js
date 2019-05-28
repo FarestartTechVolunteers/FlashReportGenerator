@@ -94,8 +94,9 @@ class ChartView extends Component {
             let endDay = day + 6;
             // let year = parseInt(date.substring(11, 15));
             let dateLabel = month + " " + day + "-" + endDay;
-            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)
-                  + "<br>" + dateLabel});
+            // the cleanest way to include a line break was to allowHtml in the table options and have the break character
+            let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
+            locationSalesTableHeader.push({ type: 'number', label: headerList});
           }
         }
         locationTotal += location.days[i].netSales;
@@ -103,6 +104,7 @@ class ChartView extends Component {
         locationDataRow[weekNumber - 1].f = this.toDollarString(locationDataRow[weekNumber - 1].v);
       }
 
+      // here, the location names are Strings, but somehow they are rendered in the table with a line break...
       locationDataRow.unshift(location.name);
       locationDataRow.push({v: locationTotal, f: this.toDollarString(locationTotal)});
 
@@ -161,6 +163,7 @@ class ChartView extends Component {
               data={this.state.salesDataByLocationByWeek}
               options={{
                 showRowNumber: false,
+                allowHtml: true // for line breaks in table headers
               }}
               rootProps={{ 'data-testid': '1' }}
             />
