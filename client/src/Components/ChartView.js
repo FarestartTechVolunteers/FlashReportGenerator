@@ -110,7 +110,6 @@ class ChartView extends Component {
       }
       totalByWeekRow.push({v: sumForWeek, f: this.toDollarString(sumForWeek)});
     }
-    totalByWeekRow.style = {font: bold};
 
     perLocationSalesGraphData.push(totalByWeekRow);
 
