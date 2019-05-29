@@ -35,21 +35,47 @@ class ChartView extends Component {
     // weeksData.forEach(getSalesTotal)
   };
 
+  /*
+  Param: weeksData, is an array of json objects. The first array should be the main object
+  while consecutive elements stored in the array would be the other sales that are to be compared with
+  the main sales data.
+
+  This method sets the variables of totalCompanySalesByWeek and totalCompanySales
+
+  totalCompanySalesByWeek will contain information which will be of the form:
+  {
+    [["x", "Sales starting from XX/XX/XXXX", "Sales starting from XX/XX/XXXX"], ------> This will function as the legend
+    [0, sales1, sales2],  ----> the values in the array correspond vertically to the other arrays eg:
+    [1, sales1, sales2],        x will have points on 0,1,2
+    [2, sales1, sales2]]
+   }
+
+   totalCompanySales holds the total representation of the main sale's total
+
+   For more info for how this works with the <Chart>
+   refer to: https://react-google-charts.com/line-chart?fbclid=IwAR3zgNXq8eEnUxwXttmFs3bZO6TzaLne2tZCzXcC5rEqowRc8KcQ4Bmj7Ao
+   */
   getCompanySalesWeeklyTotal = weeksData => {
     let salesWeekly = getWeeklySales(weeksData[0].data);
     let totalCompanySales = getTotalSales(salesWeekly);
+    // Above is the main data
     let salesDataGraphPrefix = [
-      ["x", "Sales of " + weeksData[0].data[0].date.getFullYear()],
+      ["x", "Sales starting from " + weeksData[0].data[0].date.toDateString()],
     ]
-    // Concats the other weekly sales so that we can graph other trends
+
+    // Concatenates the other weekly sales so that we can graph other trends
     for (let i = 1; i < weeksData.length; i++){
       let otherSalesWeekly = getWeeklySales(weeksData[i].data);
       for (let j = 0; j < salesWeekly.length; j++){
         salesWeekly[j].push(otherSalesWeekly[j][1]);
       }
-      salesDataGraphPrefix[0].push("Sales of " + weeksData[i].data[0].date.getFullYear());
+      let date = weeksData[i].data[0].date;
+      // This part adds on to the legend with what date the sales are counted from
+      salesDataGraphPrefix[0].push("Sales starting from " + date.toDateString());
     }
 
+    // This combines the legend array (at the beginning)with the data array
+    // to form a large array or arrays
     let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
     this.setState({
       totalCompanySalesByWeek: salesGraphDataArray,
