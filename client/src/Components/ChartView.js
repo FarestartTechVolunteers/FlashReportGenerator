@@ -151,7 +151,6 @@ class ChartView extends Component {
               data={this.state.totalCompanySalesByWeek}
               options={{
                 title: "Total Company Sales: " + this.state.totalCompanySales,
-                legend: "none",
                 hAxis: {
                   title: "Weeks"
                 },
