@@ -23,44 +23,28 @@ const Trends = (props) => {
 
 class App extends Component {
   state = {
-    activeWeek1: [], // 7 date objects
-    activeWeek2: [],
-    dataForWeek1: {},
-    dataForWeek2: {},
+    activeWeek: [], // 7 date objects
+    dataForWeek: {},
     dataForWeekLastYear: {},
     isLoading: false
   };
 
-  handleSetWeek1 = async (activeWeek1) => {
-    // console.log(activeWeek1); // for debugging
-    this.setState({ isLoading: true, activeWeek1 });
-    const dataForWeek = await fetchDataForWeek(activeWeek1[0]);
-    this.setState({ isLoading: false, dataForWeek1: dataForWeek});
+  handleSetWeek = async (activeWeek) => {
+    // console.log(activeWeek); // for debugging
+    this.setState({ isLoading: true, activeWeek });
+    const dataForWeek = await fetchDataForWeek(activeWeek[0]);
+    this.setState({ isLoading: false, dataForWeek: dataForWeek});
   };
 
-  handleSetWeek2 = async (activeWeek2) => {
-    // console.log(activeWeek2); // for debugging
-    this.setState({ isLoading: true, activeWeek2 });
-    const dataForWeek = await fetchDataForWeek(activeWeek2[0]);
-    this.setState({ isLoading: false, dataForWeek2: dataForWeek});
-  };
-
-  handleSelect1Change = async (select1) => {
-    // TODO get various calls from API
-  }
-
-  handleSelect2Change = async (select2) => {
-    // TODO get various calls from API
-  }
 
   componentDidMount() {
     document.title = "FareStart: Flash Report";
   }
 
   render() {
-    const { activeWeek1, activeWeek2, dataForWeek1, dataForWeek2, isLoading } = this.state;
-    const { locations } = dataForWeek1;
-    const startDate = activeWeek1[0];
+    const { activeWeek, dataForWeek, isLoading } = this.state;
+    const { locations } = dataForWeek;
+    const startDate = activeWeek[0];
 
     return (
       <div className='mw9 center bg-white pa3'>
@@ -69,31 +53,20 @@ class App extends Component {
             <h1>FareStart: Flash Report</h1>
           </div>
           <div className='flex-0'>
-              <select onChange={this.handleSelect1Change}>
-                  <option value="1">Sales</option>
-                  <option value="2">Cost</option>
-              </select>
-              <DatePicker activeWeek={activeWeek1} onSetWeek={this.handleSetWeek1} />
-          </div>
-          <div className='flex-0'>
-              <select onChange={this.handleSelect2Change}>
-                  <option value="1">Sales</option>
-                  <option value="2">Cost</option>
-              </select>
-            <DatePicker activeWeek={activeWeek2} onSetWeek={this.handleSetWeek2} />
+              <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
           </div>
         </div>
 
         {isLoading ? (
           <React.Fragment>loading...</React.Fragment>
         ) : (
-          !isEmpty(dataForWeek1) ? (
+          !isEmpty(dataForWeek) ? (
             <React.Fragment>
               <Nav />
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={[dataForWeek1, dataForWeek2]}/>
+                <Trends path='/trends' dataForWeek={[dataForWeek]}/>
               </Router>
             </React.Fragment>
           ) : (
