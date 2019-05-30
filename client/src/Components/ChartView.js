@@ -99,11 +99,13 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
-
+    //Generate new row in the table with the by-week totals for all restaurants.
     let totalByWeekRow = ["Totals By Week"];
 
+    //1 to skip the column of restaurant names
     for(let i = 1; i < perLocationSalesGraphData[i].length; i++) {
       let sumForWeek = 0;
+      //1 to skip the header row
       for(let j = 1; j < perLocationSalesGraphData.length; j++) {
         console.log(perLocationSalesGraphData[j][i].v);
         sumForWeek += perLocationSalesGraphData[j][i].v;
@@ -111,6 +113,7 @@ class ChartView extends Component {
       totalByWeekRow.push({v: sumForWeek, f: this.toDollarString(sumForWeek)});
     }
 
+    //Add the new row to the table
     perLocationSalesGraphData.push(totalByWeekRow);
 
     // Convert table gragh data to line graph format
