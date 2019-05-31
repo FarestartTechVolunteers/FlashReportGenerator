@@ -14,12 +14,16 @@ class ChartView extends Component {
       totalCompanySalesByWeek: [],
       salesDataByLocationByWeek: [],
       companyPerWeekSalesGraphData: [],
+      startDate: "",
       salesData: []
     }
   }
 
   componentDidMount = () => {
     let data = this.props.dataForWeek;
+    this.setState({
+        startDate: data[0].data[0].date.toDateString()
+    });
     this.getCompanySalesWeeklyTotal(data);
     this.getSalesDataByLocationByWeek(data[0]);
   };
@@ -85,8 +89,6 @@ class ChartView extends Component {
   };
 
   getSalesDataByLocationByWeek = weeksData => {
-      console.log(weeksData.locations)
-
     let perLocationSalesGraphData = [];
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
 
@@ -181,7 +183,7 @@ class ChartView extends Component {
               options={{
                 title: "Total Company Sales: " + this.state.totalCompanySales,
                 hAxis: {
-                  title: "Weeks Since Start"
+                  title: "Weeks Since " + this.state.startDate
                 },
                 vAxis: {
                   title: "Sales (Dollars)"
