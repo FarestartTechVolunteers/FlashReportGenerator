@@ -37,9 +37,13 @@ class App extends Component {
     this.setState({ isLoading: false, dataForWeek: dataForWeek});
   };
 
+  // TODO: add a layer of indirection here ^ V
+
   handleSetWeeksToGoBack = async (weeksToGoBack) => {
     // console.log(weeksToGoBack.target.value) // for debugging
-    this.setState({weeksToGoBack: weeksToGoBack.target.value})
+    this.setState({ isLoading: true, weeksToGoBack: weeksToGoBack.target.value });
+    const dataForWeek = await fetchDataForWeek([this.state.activeWeek[0], weeksToGoBack.target.value]);
+    this.setState({ isLoading: false, dataForWeek: dataForWeek });
   };
 
 
