@@ -24,6 +24,7 @@ const Trends = (props) => {
 class App extends Component {
   state = {
     activeWeek: [], // 7 date objects
+    weeksToGoBack: 5,
     dataForWeek: {},
     dataForWeekLastYear: {},
     isLoading: false
@@ -32,8 +33,13 @@ class App extends Component {
   handleSetWeek = async (activeWeek) => {
     // console.log(activeWeek); // for debugging
     this.setState({ isLoading: true, activeWeek });
-    const dataForWeek = await fetchDataForWeek(activeWeek[0]);
+    const dataForWeek = await fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]);
     this.setState({ isLoading: false, dataForWeek: dataForWeek});
+  };
+
+  handleSetWeeksToGoBack = async (weeksToGoBack) => {
+    // console.log(weeksToGoBack.target.value) // for debugging
+    this.setState({weeksToGoBack: weeksToGoBack.target.value})
   };
 
 
@@ -53,7 +59,14 @@ class App extends Component {
             <h1>FareStart: Flash Report</h1>
           </div>
           <div className='flex-0'>
-              <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+            <select
+              value={this.state.weeksToGoBack}
+              onChange={this.handleSetWeeksToGoBack}
+            >
+              <option value={5}>6 weeks</option>
+              <option value={11}>12 weeks</option>
+            </select>
+            <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
           </div>
         </div>
 
