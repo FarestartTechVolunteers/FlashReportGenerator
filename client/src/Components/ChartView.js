@@ -60,7 +60,7 @@ class ChartView extends Component {
     let totalCompanySales = getTotalSales(salesWeekly);
     // Above is the main data
     let salesDataGraphPrefix = [
-      ["x", "Sales starting from " + weeksData[0].data[0].date.toDateString()],
+      ["x", weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
     ]
 
     // Concatenates the other weekly sales so that we can graph other trends
@@ -71,12 +71,13 @@ class ChartView extends Component {
       }
       let date = weeksData[i].data[0].date;
       // This part adds on to the legend with what date the sales are counted from
-      salesDataGraphPrefix[0].push("Sales starting from " + date.toDateString());
+      salesDataGraphPrefix[0].push(weeksData[i].data[0].date.toDateString() + " through " + weeksData[i].data[weeksData[i].data.length-1].date.toDateString());
     }
 
     // This combines the legend array (at the beginning)with the data array
     // to form a large array or arrays
     let salesGraphDataArray = salesDataGraphPrefix.concat(salesWeekly);
+
     this.setState({
       totalCompanySalesByWeek: salesGraphDataArray,
       totalCompanySales: this.toDollarString(totalCompanySales)
@@ -84,6 +85,7 @@ class ChartView extends Component {
   };
 
   getSalesDataByLocationByWeek = weeksData => {
+      console.log(weeksData.locations)
 
     let perLocationSalesGraphData = [];
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
@@ -98,7 +100,7 @@ class ChartView extends Component {
           locationDataRow.push({v: 0, f: '$0'});
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
-            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)});
+            locationSalesTableHeader.push({ type: 'number', label: location.days[(weekNumber - 1) * 7].date.toDateString()});
           }
         }
         locationTotal += location.days[i].netSales;
@@ -151,6 +153,7 @@ class ChartView extends Component {
   };
 
   render() {
+    // console.log(this.state.salesDataByLocationByWeek)
     return (
       <div>
         <h2>Total Sales: {this.state.totalCompanySales}</h2>
@@ -178,10 +181,10 @@ class ChartView extends Component {
               options={{
                 title: "Total Company Sales: " + this.state.totalCompanySales,
                 hAxis: {
-                  title: "Weeks"
+                  title: "Weeks Since Start"
                 },
                 vAxis: {
-                  title: "Sales Dollars"
+                  title: "Sales (Dollars)"
                 }
               }}
               rootProps={{ "data-testid": "1" }}
@@ -213,6 +216,8 @@ class ChartView extends Component {
 function getWeeklySales(data) {
   let salesDataByDate = data; // see forEach(location ...
   let salesWeekly = [];
+
+  // TODO salesDataByDate.length sometimes breaks for unknown reasons
   for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
     let weekNumber = Math.floor(i/7.0) + 1;
     if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
