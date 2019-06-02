@@ -10,6 +10,7 @@ import ChartView from "./Components/ChartView";
 import CompanyChart from "./Components/CompanyChart";
 
 import "tachyons/css/tachyons.css";
+import ExtraSelector from "./Components/ExtraSelector";
 
 const Overview = ({ locations, startDate }) => <DataTable locations={locations} startDate={startDate} />
 
@@ -71,6 +72,7 @@ class App extends Component {
               <option value={11}>12 weeks</option>
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+            <ExtraSelector/>
           </div>
         </div>
 
