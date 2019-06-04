@@ -91,9 +91,8 @@ class ChartView extends Component {
             // 012345678901234
             let month = date.substring(4, 7);
             let day = parseInt(date.substring(8, 10));
-            let endDay = day + 6;
             // let year = parseInt(date.substring(11, 15));
-            let dateLabel = month + " " + day + "-" + endDay;
+            let dateLabel = month + " " + day;
             // the cleanest way to include a line break was to allowHtml in the table options and have the break character
             let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
             locationSalesTableHeader.push({ type: 'number', label: headerList});
