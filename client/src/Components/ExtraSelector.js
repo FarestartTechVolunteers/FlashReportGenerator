@@ -12,18 +12,8 @@ class ExtraSelector extends Component {
     }); */
   }
 
-  state = { // TODO: maybe include last month feature? Although there would be a lot of overlap
-    budget: false,
-    labor: false,
-    lastYear: false
-  };
-
-  componentDidMount = () => {
-
-  }
-
   handleCheckboxChange = event => {
-    switch (event.target.value) {
+    /*switch (event.target.value) {
       case "0":
         this.setState({budget: !this.state.budget});
         break;
@@ -36,13 +26,15 @@ class ExtraSelector extends Component {
       default:
         console.log("system error: " + event.target.value + " not recognized.");
         break;
-    }
-    this.props.func(this.state.budget, this.state.labor, this.state.lastYear);
+    }*/
   };
 
 
   render() {
-    const {budget, labor, lastYear} = this.state;
+    console.log("es:\n" +
+                "budget: " + this.props.flag[0] +"\n"+
+                "labor: " + this.props.flag[1] + "\n" +
+                "lastYear: " + this.props.flag[2]);
 
     const Checkbox = props => (
       <input type="checkbox" {...props} />
@@ -52,8 +44,8 @@ class ExtraSelector extends Component {
       <div>
         <label>
           <Checkbox
-            checked={budget}
-            onChange={this.handleCheckboxChange}
+            checked={this.props.flag[0]}
+            onChange={() => this.props.func(!this.props.flag[0], this.props.flag[1], this.props.flag[2])}
             value={0}
           />
           <span>Budget</span>
@@ -61,8 +53,8 @@ class ExtraSelector extends Component {
         <br></br>
         <label>
           <Checkbox
-            checked={labor}
-            onChange={this.handleCheckboxChange}
+            checked={this.props.flag[1]}
+            onChange={() => this.props.func(this.props.flag[0], !this.props.flag[1], this.props.flag[2])}
             value={1}
           />
           <span>Labor Cost</span>
@@ -70,8 +62,8 @@ class ExtraSelector extends Component {
         <br></br>
         <label>
           <Checkbox
-            checked={lastYear}
-            onChange={this.handleCheckboxChange}
+            checked={this.props.flag[2]}
+            onChange={() => this.props.func(this.props.flag[0], this.props.flag[1], !this.props.flag[2])}
             value={2}
           />
           <span>Last Year</span>
