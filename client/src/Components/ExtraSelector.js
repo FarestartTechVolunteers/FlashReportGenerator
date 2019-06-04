@@ -6,7 +6,6 @@ import React, { Component } from "react";
 class ExtraSelector extends Component {
   constructor(props) {
     super();
-    props.func()
     // TODO: it would be ideal if this content was created dynamically.
     /* props.forEach(option => {
 
@@ -38,6 +37,7 @@ class ExtraSelector extends Component {
         console.log("system error: " + event.target.value + " not recognized.");
         break;
     }
+    this.props.func(this.state.budget, this.state.labor, this.state.lastYear);
   };
 
 

@@ -24,6 +24,9 @@ const Trends = (props) => {
 
 class App extends Component {
   state = {
+    budget: false,
+    labor: false,
+    lastYear: false,
     activeWeek: [], // 7 date objects
     weeksToGoBack: 5,
     dataForWeek: {},
@@ -57,6 +60,9 @@ class App extends Component {
     const { locations } = dataForWeek;
     const startDate = activeWeek[0];
 
+    console.log(this.state.budget);
+    console.log(this.state.labor);
+    console.log(this.state.lastYear);
     return (
       <div className='mw9 center bg-white pa3'>
         <div className='flex flex-row items-baseline justify-between content-center'>
@@ -72,7 +78,8 @@ class App extends Component {
               <option value={11}>12 weeks</option>
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
-            <ExtraSelector/>
+            <ExtraSelector func={(es_budget, es_labor, es_lastYear)=>
+              this.setState({budget: es_budget, labor: es_labor, lastYear: es_lastYear})}/>
           </div>
         </div>
 
