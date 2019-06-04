@@ -56,20 +56,16 @@ class App extends Component {
   }
 
   render() {
-    const { /*budget, labor, lastYear,*/ activeWeek, dataForWeek, isLoading } = this.state;
+    const { activeWeek, dataForWeek, isLoading } = this.state;
     const { locations } = dataForWeek;
     const startDate = activeWeek[0];
 
-    console.log("app:\nbudget? " + (this.state.budget) +
-                "\nlabor? " + (this.state.labor) +
-                "\nlastYear? " + (this.state.lastYear));
     return (
       <div className='mw9 center bg-white pa3'>
         <div className='flex flex-row items-baseline justify-between content-center'>
           <div className='flex-0'>
             <h1>FareStart: Flash Report</h1>
           </div>
-          <h1>Hello World!</h1>
           <div className='flex-0'>
             <select
               value={this.state.weeksToGoBack}
@@ -80,7 +76,7 @@ class App extends Component {
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
             <ExtraSelector flag={[this.state.budget, this.state.labor, this.state.lastYear]}
-                           func={(es_budget, es_labor, es_lastYear)=>
+                           func={(es_budget, es_labor, es_lastYear) =>
               this.setState({budget: es_budget, labor: es_labor, lastYear: es_lastYear})}/>
           </div>
         </div>

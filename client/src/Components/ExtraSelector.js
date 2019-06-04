@@ -6,36 +6,9 @@ import React, { Component } from "react";
 class ExtraSelector extends Component {
   constructor(props) {
     super();
-    // TODO: it would be ideal if this content was created dynamically.
-    /* props.forEach(option => {
-
-    }); */
   }
 
-  handleCheckboxChange = event => {
-    /*switch (event.target.value) {
-      case "0":
-        this.setState({budget: !this.state.budget});
-        break;
-      case "1":
-        this.setState({labor: !this.state.labor});
-        break;
-      case "2":
-        this.setState({lastYear: !this.state.lastYear});
-        break;
-      default:
-        console.log("system error: " + event.target.value + " not recognized.");
-        break;
-    }*/
-  };
-
-
   render() {
-    console.log("es:\n" +
-                "budget: " + this.props.flag[0] +"\n"+
-                "labor: " + this.props.flag[1] + "\n" +
-                "lastYear: " + this.props.flag[2]);
-
     const Checkbox = props => (
       <input type="checkbox" {...props} />
     );
