@@ -99,11 +99,29 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
+    //Generate new row in the table with the by-week totals for all restaurants.
+    let totalByWeekRow = ["Totals By Week"];
+
+    //1 to skip the column of restaurant names
+    for(let i = 1; i < perLocationSalesGraphData[i].length; i++) {
+      let sumForWeek = 0;
+      //1 to skip the header row
+      for(let j = 1; j < perLocationSalesGraphData.length; j++) {
+        console.log(perLocationSalesGraphData[j][i].v);
+        sumForWeek += perLocationSalesGraphData[j][i].v;
+      }
+      totalByWeekRow.push({v: sumForWeek, f: this.toDollarString(sumForWeek)});
+    }
+
+    //Add the new row to the table
+    perLocationSalesGraphData.push(totalByWeekRow);
+
     // Convert table gragh data to line graph format
-       let companyPerWeekSalesGraphData = [];
+    let companyPerWeekSalesGraphData = [];
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
-    for (let i = 1; i < perLocationSalesGraphData.length; i++) {
+    //.length -1 to not duplicate the top chart at the end.
+    for (let i = 1; i < perLocationSalesGraphData.length -1 ; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
       let locationTotalSales = 0;
@@ -137,7 +155,7 @@ class ChartView extends Component {
     return (
       <div>
         <h2>Total Sales: {this.state.totalCompanySales}</h2>
-        <div className='flex flex-row items-center justify-around'>
+        <div className='flex flex-wrap items-center justify-around'>
           <div className='flex-0 outline'>
             <Chart
               width={'100%'}
