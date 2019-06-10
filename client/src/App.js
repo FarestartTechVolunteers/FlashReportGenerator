@@ -17,20 +17,19 @@ const Overview = ({ locations, startDate }) => <DataTable locations={locations} 
 const Trends = (props) => {
   return (
       <React.Fragment>
-        <ChartView dataForWeek={props.dataForWeek}/>
+        <ChartView dataForWeek={props.dataForWeek} dataType={props.dataType}/>
       </React.Fragment>
   );
 }
 
 class App extends Component {
   state = {
-    budget: false,
-    labor: false,
-    lastYear: false,
+    dataType: 'netSales', // this is default
     activeWeek: [], // 7 date objects
     weeksToGoBack: 5,
     dataForWeek: {},
     dataForWeekLastYear: {},
+    allData: {},
     isLoading: false
   };
 
@@ -38,7 +37,17 @@ class App extends Component {
     // console.log(activeWeek); // for debugging
     this.setState({ isLoading: true, activeWeek });
     const dataForWeek = await fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]);
-    this.setState({ isLoading: false, dataForWeek: dataForWeek});
+
+    if(this.state.dataType === "lastYear"){
+      const lastYearActiveWeek = new Date(activeWeek[0]);
+      lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
+      const dataForWeekLastYear = await fetchDataForWeek([lastYearActiveWeek, this.state.weeksToGoBack]);
+      // we want to set the state back to net sales cause netsales is still what we want
+      this.setState({ isLoading: false, dataForWeek: dataForWeek, 
+        dataForWeekLastYear: dataForWeekLastYear, dataType: "netSales", allData: [dataForWeek, dataForWeekLastYear]});
+    }else{
+      this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
+    }
   };
 
   // TODO: add a layer of indirection here ^ V
@@ -47,16 +56,29 @@ class App extends Component {
     // console.log(weeksToGoBack.target.value) // for debugging
     this.setState({ isLoading: true, weeksToGoBack: weeksToGoBack.target.value });
     const dataForWeek = await fetchDataForWeek([this.state.activeWeek[0], weeksToGoBack.target.value]);
-    this.setState({ isLoading: false, dataForWeek: dataForWeek });
+
+    if(this.state.dataType === "lastYear"){
+      const lastYearActiveWeek = new Date(this.state.activeWeek[0]);
+      lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
+      const dataForWeekLastYear = await fetchDataForWeek([lastYearActiveWeek, weeksToGoBack.target.value]);
+      this.setState({ isLoading: false, dataForWeek: dataForWeek, 
+        dataForWeekLastYear: dataForWeekLastYear, dataType: "netSales",allData: [dataForWeek, dataForWeekLastYear]});
+    }else{
+      this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
+    }
   };
 
+  // Set the type of data
+  handleValueChange = async (value) => {
+    this.setState({dataType: value});
+  }
 
   componentDidMount() {
     document.title = "FareStart: Flash Report";
   }
 
   render() {
-    const { activeWeek, dataForWeek, isLoading } = this.state;
+    const { activeWeek, dataForWeek, isLoading, allData, dataType } = this.state;
     const { locations } = dataForWeek;
     const startDate = activeWeek[0];
 
@@ -75,9 +97,7 @@ class App extends Component {
               <option value={11}>12 weeks</option>
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
-            <ExtraSelector flag={[this.state.budget, this.state.labor, this.state.lastYear]}
-                           func={(es_budget, es_labor, es_lastYear) =>
-              this.setState({budget: es_budget, labor: es_labor, lastYear: es_lastYear})}/>
+            <ExtraSelector onValueChange={this.handleValueChange}/>
           </div>
         </div>
 
@@ -90,7 +110,7 @@ class App extends Component {
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={[dataForWeek]}/>
+                <Trends path='/trends' dataForWeek={allData} dataType={dataType}/>
               </Router>
             </React.Fragment>
           ) : (

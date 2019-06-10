@@ -15,17 +15,20 @@ class ChartView extends Component {
       salesDataByLocationByWeek: [],
       companyPerWeekSalesGraphData: [],
       startDate: "",
-      salesData: []
+      salesData: [],
+      dataType: ""
     }
   }
 
   componentDidMount = () => {
     let data = this.props.dataForWeek;
+    let dataType = this.props.dataType;
     this.setState({
-        startDate: data[0].data[0].date.toDateString()
+        startDate: data[0].data[0].date.toDateString(),
+        dataType: dataType
     });
-    this.getCompanySalesWeeklyTotal(data);
-    this.getSalesDataByLocationByWeek(data[0]);
+    this.getCompanySalesWeeklyTotal(data, dataType);
+    this.getSalesDataByLocationByWeek(data[0], dataType);
   };
 
   fetchPreviousWeeks = num => {
@@ -59,17 +62,16 @@ class ChartView extends Component {
    For more info for how this works with the <Chart>
    refer to: https://react-google-charts.com/line-chart?fbclid=IwAR3zgNXq8eEnUxwXttmFs3bZO6TzaLne2tZCzXcC5rEqowRc8KcQ4Bmj7Ao
    */
-  getCompanySalesWeeklyTotal = weeksData => {
-    let salesWeekly = getWeeklySales(weeksData[0].data);
+  getCompanySalesWeeklyTotal(weeksData, dataType){
+    let salesWeekly = getWeeklySales(weeksData[0].data, dataType);
     let totalCompanySales = getTotalSales(salesWeekly);
     // Above is the main data
     let salesDataGraphPrefix = [
       ["x", weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
     ]
-
     // Concatenates the other weekly sales so that we can graph other trends
     for (let i = 1; i < weeksData.length; i++){
-      let otherSalesWeekly = getWeeklySales(weeksData[i].data);
+      let otherSalesWeekly = getWeeklySales(weeksData[i].data, dataType);
       for (let j = 0; j < salesWeekly.length; j++){
         salesWeekly[j].push(otherSalesWeekly[j][1]);
       }
@@ -93,7 +95,7 @@ class ChartView extends Component {
    * use in the main trends data table.
    * @param weeksData
    */
-  getSalesDataByLocationByWeek = weeksData => {
+  getSalesDataByLocationByWeek(weeksData, dataType) {
     let perLocationSalesGraphData = [];
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
 
@@ -120,8 +122,9 @@ class ChartView extends Component {
             locationSalesTableHeader.push({ type: 'number', label: headerList});
           }
         }
-        locationTotal += location.days[i].netSales;
-        locationDataRow[weekNumber - 1].v += location.days[i].netSales;
+        let locationDaysData = location.days[i];
+        locationTotal += locationDaysData[dataType];
+        locationDataRow[weekNumber - 1].v += locationDaysData[dataType];
         locationDataRow[weekNumber - 1].f = this.toDollarString(locationDataRow[weekNumber - 1].v);
       }
 
@@ -136,7 +139,7 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
-    // Convert table gragh data to line graph format
+    // Convert table graph data to line graph format
        let companyPerWeekSalesGraphData = [];
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
@@ -171,10 +174,9 @@ class ChartView extends Component {
   };
 
   render() {
-    // console.log(this.state.salesDataByLocationByWeek)
     return (
       <div>
-        <h2>Total Sales: {this.state.totalCompanySales}</h2>
+        <h2>Total {this.state.dataType}: {this.state.totalCompanySales}</h2>
         <div className='flex flex-wrap items-center justify-around'>
           <div className='flex-0 outline'>
             <Chart
@@ -198,12 +200,12 @@ class ChartView extends Component {
               loader={<div>Loading Chart</div>}
               data={this.state.totalCompanySalesByWeek}
               options={{
-                title: "Total Company Sales: " + this.state.totalCompanySales,
+                title: "Total Company " + this.state.dataType + ": " + this.state.totalCompanySales,
                 hAxis: {
                   title: "Weeks Since " + this.state.startDate
                 },
                 vAxis: {
-                  title: "Sales (Dollars)"
+                  title: this.state.dataType + " (Dollars)"
                 }
               }}
               rootProps={{ "data-testid": "1" }}
@@ -232,7 +234,7 @@ class ChartView extends Component {
 ////////////////////////////////////////////////////////////////
 ////////////////////////Methods/////////////////////////////////
 ////////////////////////////////////////////////////////////////
-function getWeeklySales(data) {
+function getWeeklySales(data, dataType) {
   let salesDataByDate = data; // see forEach(location ...
   let salesWeekly = [];
 
@@ -246,7 +248,7 @@ function getWeeklySales(data) {
     let dailyCompanySales = 0;
     // saleDataByDate contains a locations field, each of which has a netSales field
     salesDataByDate[i].locations.forEach(location => {
-      dailyCompanySales += location.netSales;
+      dailyCompanySales += location[dataType];
     });
     salesWeekly[weekNumber - 1][1] += dailyCompanySales;
   }
