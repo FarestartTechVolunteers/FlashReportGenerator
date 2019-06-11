@@ -16,16 +16,19 @@ class ChartView extends Component {
       companyPerWeekSalesGraphData: [],
       startDate: "",
       salesData: [],
-      dataType: ""
+      dataType: "",
+      cleanDataType: ""
     }
   }
 
   componentDidMount = () => {
     let data = this.props.dataForWeek;
     let dataType = this.props.dataType;
+    let cleanDataType = parseDataTypeName(dataType);
     this.setState({
         startDate: data[0].data[0].date.toDateString(),
-        dataType: dataType
+        dataType: dataType,
+        cleanDataType: cleanDataType
     });
     this.getCompanySalesWeeklyTotal(data, dataType);
     this.getSalesDataByLocationByWeek(data[0], dataType);
@@ -154,11 +157,12 @@ class ChartView extends Component {
         locationTotalSales += perLocationSalesGraphData[i][j].v;
       }
 
-      graphData.unshift(["x", "Sales"]);
+      graphData.unshift(["x", parseDataTypeName(dataType)]);
       
       companyPerWeekSalesGraphData.push({
         "name": companyName,
-        "data": graphData
+        "data": graphData,
+        "cleanDataType": parseDataTypeName(dataType)
       });
     }
 
@@ -176,7 +180,7 @@ class ChartView extends Component {
   render() {
     return (
       <div>
-        <h2>Total {this.state.dataType}: {this.state.totalCompanySales}</h2>
+        <h2>Total {this.state.cleanDataType}: {this.state.totalCompanySales}</h2>
         <div className='flex flex-wrap items-center justify-around'>
           <div className='flex-0 outline'>
             <Chart
@@ -200,12 +204,12 @@ class ChartView extends Component {
               loader={<div>Loading Chart</div>}
               data={this.state.totalCompanySalesByWeek}
               options={{
-                title: "Total Company " + this.state.dataType + ": " + this.state.totalCompanySales,
+                title: "Total Company " + this.state.cleanDataType + ": " + this.state.totalCompanySales,
                 hAxis: {
                   title: "Weeks Since " + this.state.startDate
                 },
                 vAxis: {
-                  title: this.state.dataType + " (Dollars)"
+                  title: this.state.cleanDataType + " (Dollars)"
                 }
               }}
               rootProps={{ "data-testid": "1" }}
@@ -221,7 +225,7 @@ class ChartView extends Component {
             function(companyGraphData, index){
                       return (
                         <div class="w-33 pa0 mr0">
-                          <CompanyChart key={index} name={companyGraphData.name} graphData={companyGraphData.data} />
+                          <CompanyChart cleanDataType={companyGraphData.cleanDataType} key={index} name={companyGraphData.name} graphData={companyGraphData.data} />
                         </div>
                       );
                     })
@@ -261,6 +265,13 @@ function getTotalSales(salesWeekly){
     totalCompanySales += week[1];
   });
   return totalCompanySales;
+}
+
+function parseDataTypeName(dataType){
+  dataType = dataType.charAt(0).toUpperCase() + dataType.slice(1); // sets first letter uppercase
+  let cleanName = dataType.match(/[A-Z][a-z]+/g); // this seperates the words by UpperCase letters
+  cleanName = cleanName.join(" "); //  joins them with a space
+  return cleanName;
 }
 
 export default ChartView;
