@@ -62,6 +62,18 @@ class ExtraSelector extends Component {
                   Last Year
                 </label>
               </div>
+              <div className="form-check">
+                <label>
+                  <input
+                    type="radio"
+                    value="laborCost"
+                    checked={this.state.selectedOption === "laborCost"}
+                    onChange={this.handleOptionChange}
+                    className="form-check-input"
+                  />
+                  Labor Cost
+                </label>
+              </div>
             </form>
           </div>
         </div>
