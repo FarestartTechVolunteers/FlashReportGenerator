@@ -11,6 +11,7 @@ import CompanyChart from "./Components/CompanyChart";
 
 import "tachyons/css/tachyons.css";
 import ExtraSelector from "./Components/ExtraSelector";
+import OverLapOptions from "./Components/OverLapOptions";
 
 const Overview = ({ locations, startDate }) => <DataTable locations={locations} startDate={startDate} />
 
@@ -97,6 +98,9 @@ class App extends Component {
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
             <ExtraSelector onValueChange={this.handleValueChange}/>
+            <OverLapOptions flag={[this.state.budget, this.state.labor, this.state.lastYear]}
+                           func={(es_budget, es_labor, es_lastYear) =>
+              this.setState({budget: es_budget, labor: es_labor, lastYear: es_lastYear})}/>
           </div>
         </div>
 
