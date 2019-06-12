@@ -36,17 +36,16 @@ class App extends Component {
   handleSetWeek = async (activeWeek) => {
     // console.log(activeWeek); // for debugging
     this.setState({ isLoading: true, activeWeek });
-    const dataForWeek = await fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]);
-
+    const lastYearActiveWeek = new Date(activeWeek[0]);
+    await lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
+    await lastYearActiveWeek.setDate(lastYearActiveWeek.getDate() + 1); // adds day so it starts on Monday
+    const [dataForWeek, dataForWeekLastYear] = await Promise.all([fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]), fetchDataForWeek([lastYearActiveWeek, this.state.weeksToGoBack])]);
     if(this.state.dataType === "lastYear"){
-      const lastYearActiveWeek = new Date(activeWeek[0]);
-      lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
-      const dataForWeekLastYear = await fetchDataForWeek([lastYearActiveWeek, this.state.weeksToGoBack]);
-      // we want to set the state back to net sales cause netsales is still what we want
-      this.setState({ isLoading: false, dataForWeek: dataForWeek, 
+            // we want to set the state back to net sales cause netsales is still what we want
+      await this.setState({ isLoading: false, dataForWeek: dataForWeek, 
         dataForWeekLastYear: dataForWeekLastYear, dataType: "netSales", allData: [dataForWeek, dataForWeekLastYear]});
     }else{
-      this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
+      await this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
     }
   };
 
