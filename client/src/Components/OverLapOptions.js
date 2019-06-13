@@ -32,6 +32,8 @@ class OverLapOptions extends Component {
             }
         }));
 
+        this.props.onValueChange(this.state.checkboxes);
+
     };
 
     createCheckbox = option => (
@@ -50,10 +52,9 @@ class OverLapOptions extends Component {
 
     return (
         <div className="container">
-            <h3>Overlap Options</h3>
+            <h3>Extra Data Options</h3>
             <div className="row mt-5">
                 <div className="col-sm-12">
-                    {console.log()}
                     {this.createCheckboxes()}
                 </div>
             </div>

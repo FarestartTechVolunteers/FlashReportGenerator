@@ -17,20 +17,22 @@ class ChartView extends Component {
       startDate: "",
       salesData: [],
       dataType: "",
-      cleanDataType: ""
+      cleanDataType: "",
+      overLapOptions: ""
     }
   }
 
   componentDidMount = () => {
     let data = this.props.dataForWeek;
     let dataType = this.props.dataType;
+    let overLapOptions = this.props.overLapOptions;
     let cleanDataType = parseDataTypeName(dataType);
     this.setState({
         startDate: data[0].data[0].date.toDateString(),
         dataType: dataType,
         cleanDataType: cleanDataType
     });
-    this.getCompanySalesWeeklyTotal(data, dataType);
+    this.getCompanySalesWeeklyTotal(data, dataType, overLapOptions);
     this.getSalesDataByLocationByWeek(data[0], dataType);
   };
 
@@ -65,12 +67,12 @@ class ChartView extends Component {
    For more info for how this works with the <Chart>
    refer to: https://react-google-charts.com/line-chart?fbclid=IwAR3zgNXq8eEnUxwXttmFs3bZO6TzaLne2tZCzXcC5rEqowRc8KcQ4Bmj7Ao
    */
-  getCompanySalesWeeklyTotal(weeksData, dataType){
+  getCompanySalesWeeklyTotal(weeksData, dataType, extraOptions){
     let salesWeekly = getWeeklySales(weeksData[0].data, dataType);
     let totalCompanySales = getTotalSales(salesWeekly);
     // Above is the main data
     let salesDataGraphPrefix = [
-      ["x", weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
+      ["x", parseDataTypeName(dataType) + ": " + weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
     ]
     // Concatenates the other weekly sales so that we can graph other trends
     for (let i = 1; i < weeksData.length; i++){
@@ -80,7 +82,20 @@ class ChartView extends Component {
       }
       let date = weeksData[i].data[0].date;
       // This part adds on to the legend with what date the sales are counted from
-      salesDataGraphPrefix[0].push(weeksData[i].data[0].date.toDateString() + " through " + weeksData[i].data[weeksData[i].data.length-1].date.toDateString());
+      salesDataGraphPrefix[0].push(parseDataTypeName(dataType) + ": " + weeksData[i].data[0].date.toDateString() + " through " + weeksData[i].data[weeksData[i].data.length-1].date.toDateString());
+    }
+
+    //This goes through the extra data options. It will not re graph already graphed data
+    for (let extraDataType in extraOptions){
+      if(extraOptions[extraDataType] === false || extraDataType === dataType){
+        continue;
+      }
+        let extraData = getWeeklySales(weeksData[0].data, extraDataType);
+        for (let j = 0; j < salesWeekly.length; j++){
+          salesWeekly[j].push(extraData[j][1]);
+        }
+        salesDataGraphPrefix[0].push(parseDataTypeName(extraDataType));
+      
     }
 
     // This combines the legend array (at the beginning)with the data array
@@ -117,8 +132,9 @@ class ChartView extends Component {
             // 012345678901234
             let month = date.substring(4, 7);
             let day = parseInt(date.substring(8, 10));
+            let endDay = day + 6;
             // let year = parseInt(date.substring(11, 15));
-            let dateLabel = month + " " + day;
+            let dateLabel = month + " " + day + "-" + endDay;
             // the cleanest way to include a line break was to allowHtml in the table options and have the break character
             let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
             locationSalesTableHeader.push({ type: 'number', label: headerList});

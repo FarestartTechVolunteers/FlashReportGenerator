@@ -18,7 +18,7 @@ const Overview = ({ locations, startDate }) => <DataTable locations={locations} 
 const Trends = (props) => {
   return (
       <React.Fragment>
-        <ChartView dataForWeek={props.dataForWeek} dataType={props.dataType}/>
+        <ChartView dataForWeek={props.dataForWeek} dataType={props.dataType} overLapOptions={props.overLapOptions}/>
       </React.Fragment>
   );
 }
@@ -31,7 +31,8 @@ class App extends Component {
     dataForWeek: {},
     dataForWeekLastYear: {},
     allData: {},
-    isLoading: false
+    isLoading: false,
+    overLapOptions: []
   };
 
   handleSetWeek = async (activeWeek) => {
@@ -73,12 +74,18 @@ class App extends Component {
     this.setState({dataType: value});
   }
 
+  // Set the overlapData
+  handleOverLapDataChange = async (options) => {
+    this.setState({overLapOptions: options});
+    console.log(this.state.overLapOptions);
+  }
+
   componentDidMount() {
     document.title = "FareStart: Flash Report";
   }
 
   render() {
-    const { activeWeek, dataForWeek, isLoading, allData, dataType } = this.state;
+    const { activeWeek, dataForWeek, isLoading, allData, dataType, overLapOptions } = this.state;
     const { locations } = dataForWeek;
     const startDate = activeWeek[0];
 
@@ -98,9 +105,7 @@ class App extends Component {
             </select>
             <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
             <ExtraSelector onValueChange={this.handleValueChange}/>
-            <OverLapOptions flag={[this.state.budget, this.state.labor, this.state.lastYear]}
-                           func={(es_budget, es_labor, es_lastYear) =>
-              this.setState({budget: es_budget, labor: es_labor, lastYear: es_lastYear})}/>
+            <OverLapOptions onValueChange={this.handleOverLapDataChange}/>
           </div>
         </div>
 
@@ -113,7 +118,7 @@ class App extends Component {
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={allData} dataType={dataType}/>
+                <Trends path='/trends' dataForWeek={allData} dataType={dataType} overLapOptions={overLapOptions}/>
               </Router>
             </React.Fragment>
           ) : (

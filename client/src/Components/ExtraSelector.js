@@ -23,6 +23,7 @@ class ExtraSelector extends Component {
   render() {
     return (
       <div className="container">
+        <h3>Main Data Options</h3>
         <div className="row mt-5">
           <div className="col-sm-12">
             <form onSubmit={this.handleFormSubmit}>
