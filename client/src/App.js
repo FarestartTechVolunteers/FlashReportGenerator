@@ -110,16 +110,18 @@ class App extends Component {
         <div className='flex flex-row items-baseline justify-between content-center'>
           <div className='flex-0'>
             <h1>FareStart: Flash Report</h1>
+            {isLoading ? (<p></p>) : (<p>Please select a date range to view the report.</p>)}
           </div>
           <div className='flex-0'>
             <select
               value={this.state.weeksToGoBack}
               onChange={this.handleSetWeeksToGoBack}
+              style={{paddingBottom: '10px'}}
             >
               <option value={5}>6 weeks</option>
               <option value={11}>12 weeks</option>
             </select>
-            <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} />
+            <DatePicker activeWeek={activeWeek} onSetWeek={this.handleSetWeek} style={{paddingTop: '10px'}} />
             <ExtraSelector onValueChange={this.handleValueChange}/>
             <OverLapOptions onValueChange={this.handleOverLapDataChange}/>
           </div>
@@ -138,7 +140,7 @@ class App extends Component {
               </Router>
             </React.Fragment>
           ) : (
-            <p>Please select a date range to view the report.</p>
+            <p></p>
           )
         )}
       </div>
