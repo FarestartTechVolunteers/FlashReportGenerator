@@ -8,31 +8,30 @@ const OPTIONS = ["budget", "laborCost", "netSales"];
 class OverLapOptions extends Component {
     constructor(props) {
         super();
+        this.state = {
+          checkboxes: {}
+        }
     }
 
-    
-
-    state = {
-        checkboxes: OPTIONS.reduce(
-          (options, option) => ({
-            ...options,
-            [option]: false
-          }),
-          {}
-        )
+    componentDidMount = () => {
+      let startCheckBoxes = {};
+      for(let i = 0; i < OPTIONS.length; i++){
+        startCheckBoxes[OPTIONS[i]] = false;
+      }
+      this.setState({
+          checkboxes: startCheckBoxes
+      });
     };
 
     handleCheckboxChange = changeEvent => {
-        const { name } = changeEvent.target;
+        const name = changeEvent.target.name;
+        let newCheckBoxes = this.state.checkboxes;
+        newCheckBoxes[name] = !newCheckBoxes[name]
+        this.setState({
+          checkboxes: newCheckBoxes
+        });
 
-        this.setState(prevState => ({
-            checkboxes: {
-            ...prevState.checkboxes,
-            [name]: !prevState.checkboxes[name]
-            }
-        }));
-
-        this.props.onValueChange(this.state.checkboxes);
+        this.props.onValueChange(newCheckBoxes);
 
     };
 

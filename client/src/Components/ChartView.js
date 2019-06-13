@@ -18,7 +18,7 @@ class ChartView extends Component {
       salesData: [],
       dataType: "",
       cleanDataType: "",
-      overLapOptions: ""
+      overLapOptions: []
     }
   }
 
@@ -33,7 +33,7 @@ class ChartView extends Component {
         cleanDataType: cleanDataType
     });
     this.getCompanySalesWeeklyTotal(data, dataType, overLapOptions);
-    this.getSalesDataByLocationByWeek(data[0], dataType);
+    this.getSalesDataByLocationByWeek(data, dataType, overLapOptions);
   };
 
   fetchPreviousWeeks = num => {
@@ -80,7 +80,6 @@ class ChartView extends Component {
       for (let j = 0; j < salesWeekly.length; j++){
         salesWeekly[j].push(otherSalesWeekly[j][1]);
       }
-      let date = weeksData[i].data[0].date;
       // This part adds on to the legend with what date the sales are counted from
       salesDataGraphPrefix[0].push(parseDataTypeName(dataType) + ": " + weeksData[i].data[0].date.toDateString() + " through " + weeksData[i].data[weeksData[i].data.length-1].date.toDateString());
     }
@@ -109,22 +108,38 @@ class ChartView extends Component {
   };
 
   /**
-   * Takes a set of six weeks worth of data and parses it for
+   * Takes a set weeks worth of data and parses it for
    * use in the main trends data table.
    * @param weeksData
    */
-  getSalesDataByLocationByWeek(weeksData, dataType) {
+  getSalesDataByLocationByWeek(weeksData, dataType, extraOptions) {
     let perLocationSalesGraphData = [];
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
-
-    weeksData.locations.forEach(location => {
+    console.log(weeksData);
+    weeksData[0].locations.forEach(location => {
+      console.log(location);
       let locationDataRow = [];
       let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
         let weekNumber = Math.floor(i/7.0) + 1;
         if (locationDataRow.length < weekNumber) {
-          locationDataRow.push({v: 0, f: '$0'});
+          locationDataRow.push({});
+          
+          // insert main data type
+          locationDataRow[weekNumber - 1][dataType] = {v: 0, f: '$0'};
 
+          //insert last year if needed
+          // if(weeksData.length > 1){
+          //   locationDataRow[weekNumber - 1]["lastYear"] = {v: 0, f: '$0'};
+          // }
+        
+          //insert extra data types
+          for(let extraDataType in extraOptions){
+            if(extraDataType === dataType || extraOptions[extraDataType] === false){
+              continue;
+            }
+            locationDataRow[weekNumber - 1][extraDataType] = {v: 0, f: '$0'};
+          }
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
             let date = location.days[i].date.toString();
@@ -142,14 +157,32 @@ class ChartView extends Component {
         }
         let locationDaysData = location.days[i];
         locationTotal += locationDaysData[dataType];
-        locationDataRow[weekNumber - 1].v += locationDaysData[dataType];
-        locationDataRow[weekNumber - 1].f = this.toDollarString(locationDataRow[weekNumber - 1].v);
+
+        // insert main data type
+        locationDataRow[weekNumber - 1][dataType].v += locationDaysData[dataType];
+        locationDataRow[weekNumber - 1][dataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
+
+        //insert last year if needed
+        // if(weeksData.length > 1){
+        //   let lastYearLocationDaysData = location.days[i];
+        //   locationDataRow[weekNumber - 1][dataType].v += locationDaysData[dataType];
+        //   locationDataRow[weekNumber - 1][dataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
+        // }
+
+        //insert extra data types
+        for(let extraDataType in extraOptions){
+          if(extraDataType === dataType || extraOptions[extraDataType] === false){
+            continue;
+          }
+          locationDataRow[weekNumber - 1][extraDataType].v += locationDaysData[extraDataType];
+          locationDataRow[weekNumber - 1][extraDataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
+        }
+        
       }
 
       // here, the location names are Strings, but somehow they are rendered in the table with a line break...
       locationDataRow.unshift(location.name);
       locationDataRow.push({v: locationTotal, f: this.toDollarString(locationTotal)});
-
       perLocationSalesGraphData.push(locationDataRow);
     });
 
@@ -158,22 +191,37 @@ class ChartView extends Component {
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
     // Convert table graph data to line graph format
-       let companyPerWeekSalesGraphData = [];
+    let companyPerWeekSalesGraphData = [];
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
     for (let i = 1; i < perLocationSalesGraphData.length; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
+      let dataheader = ["x"];
       let locationTotalSales = 0;
 
       // .length - 1 to remove table graph's "total" value
       for (let j = 1; j < perLocationSalesGraphData[i].length - 1; j++) {
-        graphData.push([j, perLocationSalesGraphData[i][j].v]);
+        let dataRow = [j];
+        for(let types in perLocationSalesGraphData[i][j]){
+          dataRow.push(perLocationSalesGraphData[i][j][types].v);
+        
+          if(j === 1){
+            dataheader.push(parseDataTypeName(types)); // Do this only once
+          }
+          
+        }
+        
+        graphData.push(dataRow);
+
+        // Since data has been put in the data row revert to main data for
+        perLocationSalesGraphData[i][j] = perLocationSalesGraphData[i][j][dataType];
+        
         locationTotalSales += perLocationSalesGraphData[i][j].v;
+        
       }
 
-      graphData.unshift(["x", parseDataTypeName(dataType)]);
-      
+      graphData.unshift(dataheader);
       companyPerWeekSalesGraphData.push({
         "name": companyName,
         "data": graphData,
@@ -253,6 +301,10 @@ class ChartView extends Component {
 ////////////////////////////////////////////////////////////////
 ////////////////////////Methods/////////////////////////////////
 ////////////////////////////////////////////////////////////////
+function getLocationDataRow(){
+
+}
+
 function getWeeklySales(data, dataType) {
   let salesDataByDate = data; // see forEach(location ...
   let salesWeekly = [];

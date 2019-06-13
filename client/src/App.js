@@ -40,7 +40,12 @@ class App extends Component {
     this.setState({ isLoading: true, activeWeek });
     const lastYearActiveWeek = new Date(activeWeek[0]);
     await lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
-    await lastYearActiveWeek.setDate(lastYearActiveWeek.getDate() + 1); // adds day so it starts on Monday
+    if(lastYearActiveWeek.getDay() === 0){
+      await lastYearActiveWeek.setDate(lastYearActiveWeek.getDate() + 1); // adds day so it starts on Monday
+    }else{
+      await lastYearActiveWeek.setDate(lastYearActiveWeek.getDate()); // Do not add a day in case of a leap year
+    }
+    
     const [dataForWeek, dataForWeekLastYear] = await Promise.all([fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]), fetchDataForWeek([lastYearActiveWeek, this.state.weeksToGoBack])]);
     if(this.state.dataType === "lastYear"){
             // we want to set the state back to net sales cause netsales is still what we want
