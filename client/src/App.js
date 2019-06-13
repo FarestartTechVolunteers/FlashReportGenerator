@@ -82,7 +82,6 @@ class App extends Component {
   // Set the overlapData
   handleOverLapDataChange = async (options) => {
     this.setState({overLapOptions: options});
-    console.log(this.state.overLapOptions);
   }
 
   componentDidMount() {
