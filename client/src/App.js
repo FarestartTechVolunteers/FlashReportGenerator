@@ -30,6 +30,7 @@ class App extends Component {
     weeksToGoBack: 5,
     dataForWeek: {},
     dataForWeekLastYear: {},
+    showLastYear: false,
     allData: {},
     isLoading: false,
     overLapOptions: []
@@ -63,7 +64,7 @@ class App extends Component {
     this.setState({ isLoading: true, weeksToGoBack: weeksToGoBack.target.value });
     const dataForWeek = await fetchDataForWeek([this.state.activeWeek[0], weeksToGoBack.target.value]);
 
-    if(this.state.dataType === "lastYear"){
+    if(this.state.showLastYear){
       const lastYearActiveWeek = new Date(this.state.activeWeek[0]);
       lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
       const dataForWeekLastYear = await fetchDataForWeek([lastYearActiveWeek, weeksToGoBack.target.value]);
@@ -76,7 +77,18 @@ class App extends Component {
 
   // Set the type of data
   handleValueChange = async (value) => {
-    this.setState({dataType: value});
+    
+    if(value === "lastYear"){
+      this.setState({
+        dataType: value,
+        showLastYear: true
+      });
+    }else{
+      this.setState({
+        dataType: value,
+        showLastYear: false
+      });
+    }
   }
 
   // Set the overlapData
