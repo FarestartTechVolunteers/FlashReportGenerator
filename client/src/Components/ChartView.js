@@ -118,7 +118,6 @@ class ChartView extends Component {
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
     let locationIndex = 0; // This is strictly for getting the last years locaton content
     weeksData[0].locations.forEach(location => {
-      console.log(location);
       let locationDataRow = [];
       let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
@@ -144,7 +143,6 @@ class ChartView extends Component {
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
             let date = new Date(location.days[i].date.getTime()); // clone the date as we will add days
-            console.log(date);
             let month = date.getMonth() + 1;
             let day = date.getDate();
             if(bottomLabel === ""){
