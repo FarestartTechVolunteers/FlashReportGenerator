@@ -74,19 +74,20 @@ class ChartView extends Component {
     let salesDataGraphPrefix = [
       ["x", parseDataTypeName(dataType) + ": " + weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
     ]
-    // Concatenates the other weekly sales so that we can graph other trends
-    for (let i = 1; i < weeksData.length; i++){
-      let otherSalesWeekly = getWeeklySales(weeksData[i].data, dataType);
+    if(extraOptions["lastYear"] === true){
+      // Concatenates the other weekly sales so that we can graph other trends
+      let otherSalesWeekly = getWeeklySales(weeksData[1].data, dataType);
       for (let j = 0; j < salesWeekly.length; j++){
         salesWeekly[j].push(otherSalesWeekly[j][1]);
       }
       // This part adds on to the legend with what date the sales are counted from
-      salesDataGraphPrefix[0].push(parseDataTypeName(dataType) + ": " + weeksData[i].data[0].date.toDateString() + " through " + weeksData[i].data[weeksData[i].data.length-1].date.toDateString());
+      salesDataGraphPrefix[0].push(parseDataTypeName("lastYear"));
+      
     }
 
     //This goes through the extra data options. It will not re graph already graphed data
     for (let extraDataType in extraOptions){
-      if(extraOptions[extraDataType] === false || extraDataType === dataType){
+      if(extraOptions[extraDataType] === false || extraDataType === dataType || extraDataType === "lastYear"){
         continue;
       }
         let extraData = getWeeklySales(weeksData[0].data, extraDataType);
@@ -128,13 +129,13 @@ class ChartView extends Component {
           locationDataRow[weekNumber - 1][dataType] = {v: 0, f: '$0'};
 
           //insert last year if needed
-          if(weeksData.length > 1){
+          if(extraOptions["lastYear"] === true){
             locationDataRow[weekNumber - 1]["lastYear"] = {v: 0, f: '$0'};
           }
         
           //insert extra data types
           for(let extraDataType in extraOptions){
-            if(extraDataType === dataType || extraOptions[extraDataType] === false){
+            if(extraDataType === dataType || extraOptions[extraDataType] === false || extraDataType === "lastYear"){
               continue;
             }
             locationDataRow[weekNumber - 1][extraDataType] = {v: 0, f: '$0'};
@@ -162,7 +163,7 @@ class ChartView extends Component {
         locationDataRow[weekNumber - 1][dataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
 
         //insert last year if needed
-        if(weeksData.length > 1){
+        if(extraOptions["lastYear"] === true){
           let lastYearLocationDaysData = weeksData[1].locations[locationIndex].days[i];
           locationDataRow[weekNumber - 1]["lastYear"].v += lastYearLocationDaysData[dataType];
           locationDataRow[weekNumber - 1]["lastYear"].f = this.toDollarString(locationDataRow[weekNumber - 1]["lastYear"].v);
@@ -170,7 +171,7 @@ class ChartView extends Component {
 
         //insert extra data types
         for(let extraDataType in extraOptions){
-          if(extraDataType === dataType || extraOptions[extraDataType] === false){
+          if(extraDataType === dataType || extraOptions[extraDataType] === false || extraDataType === "lastYear"){
             continue;
           }
           locationDataRow[weekNumber - 1][extraDataType].v += locationDaysData[extraDataType];
@@ -332,6 +333,10 @@ function getTotalSales(salesWeekly){
 }
 
 function parseDataTypeName(dataType){
+  //if special case of lastyear, return LY Net Sales 
+  if(dataType === "lastYear"){
+    return "LY Net Sales";
+  }
   dataType = dataType.charAt(0).toUpperCase() + dataType.slice(1); // sets first letter uppercase
   let cleanName = dataType.match(/[A-Z][a-z]+/g); // this seperates the words by UpperCase letters
   cleanName = cleanName.join(" "); //  joins them with a space
