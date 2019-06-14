@@ -4,7 +4,8 @@ import Checkbox from "./Checkbox";
  * This is meant to be a menu of checkboxes where the client can opt for additional information about
  * the selected time frame to be shown.
  */
-const OPTIONS = ["budget", "laborCost", "netSales"];
+const OPTIONS = ["budget", "laborCost", "lastYear"];
+const LABEL_OPTIONS = {"budget":"Budget", "laborCost":"Labor Cost", "lastYear":"LY Net Sales"};
 class OverLapOptions extends Component {
     constructor(props) {
         super();
@@ -37,7 +38,7 @@ class OverLapOptions extends Component {
 
     createCheckbox = option => (
     <Checkbox
-        label={parseDataTypeName(option)}
+        label={LABEL_OPTIONS[option]}
         isSelected={this.state.checkboxes[option]}
         onCheckboxChange={this.handleCheckboxChange}
         key={option}

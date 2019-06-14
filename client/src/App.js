@@ -37,7 +37,6 @@ class App extends Component {
   };
 
   handleSetWeek = async (activeWeek) => {
-    // console.log(activeWeek); // for debugging
     this.setState({ isLoading: true, activeWeek });
     const lastYearActiveWeek = new Date(activeWeek[0]);
     await lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
@@ -48,17 +47,16 @@ class App extends Component {
     }
     
     const [dataForWeek, dataForWeekLastYear] = await Promise.all([fetchDataForWeek([activeWeek[0], this.state.weeksToGoBack]), fetchDataForWeek([lastYearActiveWeek, this.state.weeksToGoBack])]);
-    if(this.state.dataType === "lastYear"){
+    if(this.state.showLastYear){
             // we want to set the state back to net sales cause netsales is still what we want
       await this.setState({ isLoading: false, dataForWeek: dataForWeek, 
-        dataForWeekLastYear: dataForWeekLastYear, dataType: "netSales", allData: [dataForWeek, dataForWeekLastYear]});
+        dataForWeekLastYear: dataForWeekLastYear, allData: [dataForWeek, dataForWeekLastYear]});
     }else{
       await this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
     }
   };
 
   // TODO: add a layer of indirection here ^ V
-
   handleSetWeeksToGoBack = async (weeksToGoBack) => {
     // console.log(weeksToGoBack.target.value) // for debugging
     this.setState({ isLoading: true, weeksToGoBack: weeksToGoBack.target.value });
@@ -69,7 +67,7 @@ class App extends Component {
       lastYearActiveWeek.setFullYear(lastYearActiveWeek.getFullYear() - 1);
       const dataForWeekLastYear = await fetchDataForWeek([lastYearActiveWeek, weeksToGoBack.target.value]);
       this.setState({ isLoading: false, dataForWeek: dataForWeek, 
-        dataForWeekLastYear: dataForWeekLastYear, dataType: "netSales",allData: [dataForWeek, dataForWeekLastYear]});
+        dataForWeekLastYear: dataForWeekLastYear,allData: [dataForWeek, dataForWeekLastYear]});
     }else{
       this.setState({ isLoading: false, dataForWeek: dataForWeek, allData: [dataForWeek]});
     }
@@ -77,23 +75,24 @@ class App extends Component {
 
   // Set the type of data
   handleValueChange = async (value) => {
-    
-    if(value === "lastYear"){
-      this.setState({
-        dataType: value,
-        showLastYear: true
-      });
-    }else{
-      this.setState({
-        dataType: value,
-        showLastYear: false
-      });
-    }
+    this.setState({
+      dataType: value
+    });
   }
 
   // Set the overlapData
   handleOverLapDataChange = async (options) => {
-    this.setState({overLapOptions: options});
+    if(options.hasOwnProperty("lastYear")){
+      this.setState({
+        overLapOptions: options,
+        showLastYear: true
+      });
+    }else{
+      this.setState({
+        overLapOptions: options,
+        showLastYear: false
+      });
+    }
   }
 
   componentDidMount() {
