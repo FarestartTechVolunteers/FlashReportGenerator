@@ -20,7 +20,7 @@ class CompanyChart extends Component {
             title: this.props.name + " " + this.props.cleanDataType,
             legend: "none",
             hAxis: {
-              title: "Weeks"
+              title: this.props.bottomLabel
             },
             vAxis: {
               title: this.props.cleanDataType + " Dollars"

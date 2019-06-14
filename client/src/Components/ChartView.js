@@ -28,7 +28,7 @@ class ChartView extends Component {
     let overLapOptions = this.props.overLapOptions;
     let cleanDataType = parseDataTypeName(dataType);
     this.setState({
-        startDate: data[0].data[0].date.toDateString(),
+        startDate: data[0].data[0].date.toDateString() + " - " +  data[0].data[data[0].data.length-1].date.toDateString(),
         dataType: dataType,
         cleanDataType: cleanDataType
     });
@@ -72,7 +72,7 @@ class ChartView extends Component {
     let totalCompanySales = getTotalSales(salesWeekly);
     // Above is the main data
     let salesDataGraphPrefix = [
-      ["x", parseDataTypeName(dataType) + ": " + weeksData[0].data[0].date.toDateString() + " through " + weeksData[0].data[weeksData[0].data.length-1].date.toDateString()],
+      ["x", parseDataTypeName(dataType)],
     ]
     if(extraOptions["lastYear"] === true){
       // Concatenates the other weekly sales so that we can graph other trends
@@ -90,12 +90,11 @@ class ChartView extends Component {
       if(extraOptions[extraDataType] === false || extraDataType === dataType || extraDataType === "lastYear"){
         continue;
       }
-        let extraData = getWeeklySales(weeksData[0].data, extraDataType);
-        for (let j = 0; j < salesWeekly.length; j++){
-          salesWeekly[j].push(extraData[j][1]);
-        }
-        salesDataGraphPrefix[0].push(parseDataTypeName(extraDataType));
-      
+      let extraData = getWeeklySales(weeksData[0].data, extraDataType);
+      for (let j = 0; j < salesWeekly.length; j++){
+        salesWeekly[j].push(extraData[j][1]);
+      }
+      salesDataGraphPrefix[0].push(parseDataTypeName(extraDataType));
     }
 
     // This combines the legend array (at the beginning)with the data array
@@ -115,6 +114,7 @@ class ChartView extends Component {
    */
   getSalesDataByLocationByWeek(weeksData, dataType, extraOptions) {
     let perLocationSalesGraphData = [];
+    let bottomLabel = ""
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
     let locationIndex = 0; // This is strictly for getting the last years locaton content
     weeksData[0].locations.forEach(location => {
@@ -142,14 +142,19 @@ class ChartView extends Component {
           }
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
-            let date = location.days[i].date.toString();
-            // Mon Apr 01 2019
-            // 012345678901234
-            let month = date.substring(4, 7);
-            let day = parseInt(date.substring(8, 10));
-            let endDay = day + 6;
-            // let year = parseInt(date.substring(11, 15));
-            let dateLabel = month + " " + day + "-" + endDay;
+            let date = new Date(location.days[i].date.getTime()); // clone the date as we will add days
+            let month = date.getMonth();
+            let day = date.getDate();
+            if(bottomLabel === ""){
+              bottomLabel += date.toDateString() + " - ";
+              date.setDate(day + 6)
+              bottomLabel += date.toDateString();
+            }else{
+              date.setDate(day + 6)
+            }
+            let endDay = date.getDate();
+            let endMonth = date.getMonth();
+            let dateLabel = month + "/" + day + " - " + endMonth + "/" + endDay;
             // the cleanest way to include a line break was to allowHtml in the table options and have the break character
             let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
             locationSalesTableHeader.push({ type: 'number', label: headerList});
@@ -190,7 +195,6 @@ class ChartView extends Component {
     locationSalesTableHeader.push({ type: 'number', label: 'Total' });
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
-
     // Convert table graph data to line graph format
     let companyPerWeekSalesGraphData = [];
     // i = 1 & j = 1 to discard the unwanted line graph header data
@@ -202,8 +206,10 @@ class ChartView extends Component {
 
       // .length - 1 to remove table graph's "total" value
       for (let j = 1; j < perLocationSalesGraphData[i].length - 1; j++) {
-        let dataRow = [j];
-
+        let label =  perLocationSalesGraphData[0][j].label.split("<br>");
+        let dateLabel = label[1].split(" - ")[0];
+        let dataRow = [dateLabel];
+        
         for(let types in perLocationSalesGraphData[i][j]){
           dataRow.push(perLocationSalesGraphData[i][j][types].v);
         
@@ -212,10 +218,9 @@ class ChartView extends Component {
           }
           
         }
-        
         graphData.push(dataRow);
 
-        // Since data has been put in the data row revert to main data for
+        // Since data has been put in the data row revert to main data for the table
         perLocationSalesGraphData[i][j] = perLocationSalesGraphData[i][j][dataType];
         
         locationTotalSales += perLocationSalesGraphData[i][j].v;
@@ -226,7 +231,8 @@ class ChartView extends Component {
       companyPerWeekSalesGraphData.push({
         "name": companyName,
         "data": graphData,
-        "cleanDataType": parseDataTypeName(dataType)
+        "cleanDataType": parseDataTypeName(dataType),
+        "bottomLabel": bottomLabel
       });
     }
 
@@ -270,7 +276,7 @@ class ChartView extends Component {
               options={{
                 title: "Total Company " + this.state.cleanDataType + ": " + this.state.totalCompanySales,
                 hAxis: {
-                  title: "Weeks Since " + this.state.startDate
+                  title: this.state.startDate
                 },
                 vAxis: {
                   title: this.state.cleanDataType + " (Dollars)"
@@ -289,7 +295,9 @@ class ChartView extends Component {
             function(companyGraphData, index){
                       return (
                         <div class="w-33 pa0 mr0">
-                          <CompanyChart cleanDataType={companyGraphData.cleanDataType} key={index} name={companyGraphData.name} graphData={companyGraphData.data} />
+                          <CompanyChart cleanDataType={companyGraphData.cleanDataType} key={index} 
+                          name={companyGraphData.name} graphData={companyGraphData.data} 
+                          bottomLabel={companyGraphData.bottomLabel}/>
                         </div>
                       );
                     })
@@ -311,7 +319,7 @@ function getWeeklySales(data, dataType) {
   for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
     let weekNumber = Math.floor(i/7.0) + 1;
     if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
-      salesWeekly.push([weekNumber, 0]);
+      salesWeekly.push([data[i].date.getMonth() + "/" + data[i].date.getDate(), 0]);
     }
 
     let dailyCompanySales = 0;
