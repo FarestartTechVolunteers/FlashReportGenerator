@@ -83,6 +83,16 @@ class App extends Component {
     }
   }
 
+  // Set the number of weeks to go back
+  handleNumberOfWeeksChange = async (weeksToGoBack) => {
+    this.setState({
+      weeksToGoBack: weeksToGoBack.target.value
+    });
+    if(this.state.activeWeek.length > 0){ // if date has been picked re-render the graph
+      this.handleSetWeek(this.state.activeWeek);
+    }
+  }
+
   // Set the overlapData
   handleOverLapDataChange = async (options) => {
     if(options.hasOwnProperty("lastYear")){
@@ -120,8 +130,7 @@ class App extends Component {
           <div className='flex-0'>
             <select
               value={this.state.weeksToGoBack}
-              onChange={this.handleSetWeeksToGoBack}
-              style={{paddingBottom: '10px'}}
+              onChange={this.handleNumberOfWeeksChange}
             >
               <option value={5}>6 weeks</option>
               <option value={11}>12 weeks</option>

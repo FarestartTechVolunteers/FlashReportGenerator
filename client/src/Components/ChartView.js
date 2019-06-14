@@ -253,8 +253,8 @@ class ChartView extends Component {
     return (
       <div>
         <h2>Total {this.state.cleanDataType}: {this.state.totalCompanySales}</h2>
-        <div className='flex flex-wrap items-center justify-around'>
-          <div className='flex-0 outline'>
+        <div className='flex flex-wrap items-center justify-center'>
+          <div className='flex-0 outline ma3'>
             <Chart
               width={'100%'}
               height={'100%'}
@@ -268,7 +268,7 @@ class ChartView extends Component {
               rootProps={{ 'data-testid': '1' }}
             />
           </div>
-          <div className='flex-0'>
+          <div className='flex-0 ma3'>
             <Chart
               width={"600px"}
               height={"400px"}
