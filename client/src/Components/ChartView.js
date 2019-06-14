@@ -118,6 +118,7 @@ class ChartView extends Component {
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
     let locationIndex = 0; // This is strictly for getting the last years locaton content
     weeksData[0].locations.forEach(location => {
+      console.log(location);
       let locationDataRow = [];
       let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
@@ -143,7 +144,8 @@ class ChartView extends Component {
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
             let date = new Date(location.days[i].date.getTime()); // clone the date as we will add days
-            let month = date.getMonth();
+            console.log(date);
+            let month = date.getMonth() + 1;
             let day = date.getDate();
             if(bottomLabel === ""){
               bottomLabel += date.toDateString() + " - ";
@@ -153,7 +155,7 @@ class ChartView extends Component {
               date.setDate(day + 6)
             }
             let endDay = date.getDate();
-            let endMonth = date.getMonth();
+            let endMonth = date.getMonth() + 1;
             let dateLabel = month + "/" + day + " - " + endMonth + "/" + endDay;
             // the cleanest way to include a line break was to allowHtml in the table options and have the break character
             let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
@@ -319,7 +321,7 @@ function getWeeklySales(data, dataType) {
   for (let i = 0; i < salesDataByDate.length; i++) { // go through a month day by day
     let weekNumber = Math.floor(i/7.0) + 1;
     if (salesWeekly.length < weekNumber) { // mapping a week to the amount of sales
-      salesWeekly.push([data[i].date.getMonth() + "/" + data[i].date.getDate(), 0]);
+      salesWeekly.push([data[i].date.getMonth() + 1 + "/" + data[i].date.getDate(), 0]);
     }
 
     let dailyCompanySales = 0;
