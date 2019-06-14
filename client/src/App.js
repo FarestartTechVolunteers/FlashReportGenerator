@@ -78,6 +78,9 @@ class App extends Component {
     this.setState({
       dataType: value
     });
+    if(this.state.activeWeek.length > 0){ // if date has been picked re-render the graph
+      this.handleSetWeek(this.state.activeWeek);
+    }
   }
 
   // Set the overlapData
@@ -92,6 +95,9 @@ class App extends Component {
         overLapOptions: options,
         showLastYear: false
       });
+    }
+    if(this.state.activeWeek.length > 0){ // if date has been picked re-render the graph
+      this.handleSetWeek(this.state.activeWeek);
     }
   }
 
