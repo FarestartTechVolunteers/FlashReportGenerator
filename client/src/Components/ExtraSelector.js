@@ -27,42 +27,11 @@ class ExtraSelector extends Component {
         <div className="row mt-5">
           <div className="col-sm-12">
             <form onSubmit={this.handleFormSubmit}>
-              <div className="form-check">
-                <label>
-                  <input
-                    type="radio"
-                    value="netSales"
-                    checked={this.state.selectedOption === "netSales"}
-                    onChange={this.handleOptionChange}
-                    className="form-check-input"
-                  />
-                  Net Sales
-                </label>
-              </div>
-              <div className="form-check">
-                <label>
-                  <input
-                    type="radio"
-                    value="budget"
-                    checked={this.state.selectedOption === "budget"}
-                    onChange={this.handleOptionChange}
-                    className="form-check-input"
-                  />
-                  Budget
-                </label>
-              </div>
-              <div className="form-check">
-                <label>
-                  <input
-                    type="radio"
-                    value="laborCost"
-                    checked={this.state.selectedOption === "laborCost"}
-                    onChange={this.handleOptionChange}
-                    className="form-check-input"
-                  />
-                  Labor Cost
-                </label>
-              </div>
+              <select value={this.state.selectedOption} onChange={this.handleOptionChange}>
+                <option value={"netSales"}>Net Sales</option>
+                <option value={"budget"}>Budget</option>
+                <option value={"laborCost"}>Labor Cost</option>
+              </select>
             </form>
           </div>
         </div>
