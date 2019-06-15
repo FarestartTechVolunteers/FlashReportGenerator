@@ -18,7 +18,7 @@ const Overview = ({ locations, startDate }) => <DataTable locations={locations} 
 const Trends = (props) => {
   return (
       <React.Fragment>
-        <ChartView dataForWeek={props.dataForWeek} dataType={props.dataType} overLapOptions={props.overLapOptions}/>
+        <ChartView dataForWeek={props.dataForWeek} weeksToGoBack={props.weeksToGoBack} dataType={props.dataType} overLapOptions={props.overLapOptions}/>
       </React.Fragment>
   );
 }
@@ -116,7 +116,7 @@ class App extends Component {
   }
 
   render() {
-    const { activeWeek, dataForWeek, isLoading, allData, dataType, overLapOptions } = this.state;
+    const { activeWeek, dataForWeek, isLoading, allData, dataType, overLapOptions, weeksToGoBack } = this.state;
     const { locations } = dataForWeek;
     const startDate = activeWeek[0];
 
@@ -150,7 +150,7 @@ class App extends Component {
 
               <Router>
                 <Overview path='/' locations={locations} startDate={startDate} />
-                <Trends path='/trends' dataForWeek={allData} dataType={dataType} overLapOptions={overLapOptions}/>
+                <Trends path='/trends' weeksToGoBack={weeksToGoBack} dataForWeek={allData} dataType={dataType} overLapOptions={overLapOptions}/>
               </Router>
             </React.Fragment>
           ) : (

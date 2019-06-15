@@ -18,7 +18,8 @@ class ChartView extends Component {
       salesData: [],
       dataType: "",
       cleanDataType: "",
-      overLapOptions: []
+      overLapOptions: [],
+      weeksToGoBack: 5
     }
   }
 
@@ -30,7 +31,8 @@ class ChartView extends Component {
     this.setState({
         startDate: data[0].data[0].date.toDateString() + " - " +  data[0].data[data[0].data.length-1].date.toDateString(),
         dataType: dataType,
-        cleanDataType: cleanDataType
+        cleanDataType: cleanDataType,
+        weeksToGoBack: this.props.weeksToGoBack
     });
     this.getCompanySalesWeeklyTotal(data, dataType, overLapOptions);
     this.getSalesDataByLocationByWeek(data, dataType, overLapOptions);
@@ -248,6 +250,13 @@ class ChartView extends Component {
   };
 
   render() {
+    let mainChartSize = "600px";
+    let smallChartSize = "w-33 pa0 mr0";
+    console.log(this.state.weeksToGoBack)
+    if(this.state.weeksToGoBack > 5){ // 12 weeks
+      mainChartSize = "800px";
+      smallChartSize = "w-50 pa0 mr0";
+    }
     return (
       <div>
         <h2>Total {this.state.cleanDataType}: {this.state.totalCompanySales}</h2>
@@ -268,7 +277,7 @@ class ChartView extends Component {
           </div>
           <div className='flex-0 ma3'>
             <Chart
-              width={"600px"}
+              width={mainChartSize}
               height={"400px"}
               chartType="LineChart"
               loader={<div>Loading Chart</div>}
@@ -294,7 +303,7 @@ class ChartView extends Component {
           {this.state.companyPerWeekSalesGraphData.map(
             function(companyGraphData, index){
                       return (
-                        <div class="w-33 pa0 mr0">
+                        <div class= {smallChartSize}>
                           <CompanyChart cleanDataType={companyGraphData.cleanDataType} key={index} 
                           name={companyGraphData.name} graphData={companyGraphData.data} 
                           bottomLabel={companyGraphData.bottomLabel}/>

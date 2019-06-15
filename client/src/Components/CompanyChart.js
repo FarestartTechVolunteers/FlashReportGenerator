@@ -18,7 +18,6 @@ class CompanyChart extends Component {
           data={this.props.graphData}
           options={{
             title: this.props.name + " " + this.props.cleanDataType,
-            legend: "none",
             hAxis: {
               title: this.props.bottomLabel
             },
