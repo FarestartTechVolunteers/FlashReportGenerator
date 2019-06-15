@@ -118,7 +118,6 @@ class ChartView extends Component {
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
     let locationIndex = 0; // This is strictly for getting the last years locaton content
     weeksData[0].locations.forEach(location => {
-      console.log(location);
       let locationDataRow = [];
       let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
@@ -144,7 +143,6 @@ class ChartView extends Component {
 
           if (locationSalesTableHeader.length - 1 < weekNumber) {
             let date = new Date(location.days[i].date.getTime()); // clone the date as we will add days
-            console.log(date);
             let month = date.getMonth() + 1;
             let day = date.getDate();
             if(bottomLabel === ""){
@@ -253,8 +251,8 @@ class ChartView extends Component {
     return (
       <div>
         <h2>Total {this.state.cleanDataType}: {this.state.totalCompanySales}</h2>
-        <div className='flex flex-wrap items-center justify-around'>
-          <div className='flex-0 outline'>
+        <div className='flex flex-wrap items-center justify-center'>
+          <div className='flex-0 outline ma3'>
             <Chart
               width={'100%'}
               height={'100%'}
@@ -268,7 +266,7 @@ class ChartView extends Component {
               rootProps={{ 'data-testid': '1' }}
             />
           </div>
-          <div className='flex-0'>
+          <div className='flex-0 ma3'>
             <Chart
               width={"600px"}
               height={"400px"}
