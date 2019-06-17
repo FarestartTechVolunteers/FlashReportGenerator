@@ -66,6 +66,11 @@ class ChartView extends Component {
     });
   };
 
+  /**
+   * Takes a set of six weeks worth of data and parses it for
+   * use in the main trends data table.
+   * @param weeksData
+   */
   getSalesDataByLocationByWeek = weeksData => {
 
     let perLocationSalesGraphData = [];
@@ -73,15 +78,24 @@ class ChartView extends Component {
 
     weeksData.locations.forEach(location => {
       let locationDataRow = [];
-      let locationTotal = 0;  
-
+      let locationTotal = 0;
       for (let i = 0; i < location.days.length; i++) {
         let weekNumber = Math.floor(i/7.0) + 1;
         if (locationDataRow.length < weekNumber) {
           locationDataRow.push({v: 0, f: '$0'});
 
+
           if (locationSalesTableHeader.length - 1 < weekNumber) {
-            locationSalesTableHeader.push({ type: 'number', label: 'Week ' + weekNumber.toFixed(0)});
+            let date = location.days[i].date.toString();
+            // Mon Apr 01 2019
+            // 012345678901234
+            let month = date.substring(4, 7);
+            let day = parseInt(date.substring(8, 10));
+            // let year = parseInt(date.substring(11, 15));
+            let dateLabel = month + " " + day;
+            // the cleanest way to include a line break was to allowHtml in the table options and have the break character
+            let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
+            locationSalesTableHeader.push({ type: 'number', label: headerList});
           }
         }
         locationTotal += location.days[i].netSales;
@@ -89,6 +103,7 @@ class ChartView extends Component {
         locationDataRow[weekNumber - 1].f = this.toDollarString(locationDataRow[weekNumber - 1].v);
       }
 
+      // here, the location names are Strings, but somehow they are rendered in the table with a line break...
       locationDataRow.unshift(location.name);
       locationDataRow.push({v: locationTotal, f: this.toDollarString(locationTotal)});
 
@@ -165,6 +180,7 @@ class ChartView extends Component {
               data={this.state.salesDataByLocationByWeek}
               options={{
                 showRowNumber: false,
+                allowHtml: true // for line breaks in table headers
               }}
               rootProps={{ 'data-testid': '1' }}
             />
