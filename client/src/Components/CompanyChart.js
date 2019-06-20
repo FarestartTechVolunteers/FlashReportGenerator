@@ -17,13 +17,12 @@ class CompanyChart extends Component {
           loader={<div>Loading Chart</div>}
           data={this.props.graphData}
           options={{
-            title: this.props.name + " Sales",
-            legend: "none",
+            title: this.props.name + " " + this.props.cleanDataType,
             hAxis: {
-              title: "Weeks"
+              title: this.props.bottomLabel
             },
             vAxis: {
-              title: "Sales Dollars"
+              title: this.props.cleanDataType + " Dollars"
             }
           }}
           rootProps={{ "data-testid": "1" }}
