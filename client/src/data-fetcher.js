@@ -31,10 +31,9 @@ const transform = response => {
   };
 };
 
-async function fetchData(args) {
+async function fetchData(firstDay) {
   // TODO: clean this up
-  let firstDay = args[0];
-  const numberOfWeeksToLookBehind = args[1];
+  const numberOfWeeksToLookBehind = 5;
   const startDate = moment(firstDay).format('MM-DD-YYYY')
   const previousMonday = moment(firstDay).subtract(numberOfWeeksToLookBehind * 7, 'days').format('MM-DD-YYYY')
 
