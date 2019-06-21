@@ -204,7 +204,7 @@ class ChartView extends Component {
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
     //.length -1 to not duplicate the top chart at the end.
-    for (let i = 1; i < perLocationSalesGraphData.length -1 ; i++) {
+    for (let i = 1; i < perLocationSalesGraphData.length ; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
       let dataheader = ["x"];
