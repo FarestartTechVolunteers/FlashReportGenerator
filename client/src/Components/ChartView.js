@@ -99,11 +99,14 @@ class ChartView extends Component {
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
 
-    // Convert table gragh data to line graph format
-       let companyPerWeekSalesGraphData = [];
+
+    // Convert table graph data to line graph format
+    let companyPerWeekSalesGraphData = [];
+
 
     // i = 1 & j = 1 to discard the unwanted line graph header data
-    for (let i = 1; i < perLocationSalesGraphData.length; i++) {
+    //.length -1 to not duplicate the top chart at the end.
+    for (let i = 1; i < perLocationSalesGraphData.length ; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
       let locationTotalSales = 0;
