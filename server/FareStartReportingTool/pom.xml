@@ -152,7 +152,7 @@
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>2.0.7</version>
                 <configuration>
-                    <appName>thawing-lake-11340</appName>
+                    <appName>fs-flashreport-generator</appName>
 
                     <includeTarget>false</includeTarget>
                     <includes>
@@ -160,7 +160,7 @@
                     </includes>
 
                     <processTypes>
-                        <web>java -DctuitToken="d098f5a7-d1a1-483b-87eb-3ee3d42dd3c6" -DctuitUserId="128537" -jar target/${project.build.finalName}.war --server.port=$PORT</web>                    
+                        <web>java -DctuitToken="<CTUIT_TOKEN>" -DctuitUserId="<CTUIT_USER_ID>" -jar target/${project.build.finalName}.war --server.port=$PORT</web>
                     </processTypes>
                 </configuration>
             </plugin>
