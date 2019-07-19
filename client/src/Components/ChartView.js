@@ -117,6 +117,8 @@ class ChartView extends Component {
   getSalesDataByLocationByWeek(weeksData, dataType, extraOptions) {
     let perLocationSalesGraphData = [];
     let bottomLabel = ""
+    let firstDay = ""
+    let finalDay = ""
     let locationSalesTableHeader = [{ type: 'string', label: 'Location' }];
     let locationIndex = 0; // This is strictly for getting the last years locaton content
     weeksData[0].locations.forEach(location => {
@@ -147,15 +149,15 @@ class ChartView extends Component {
             let date = new Date(location.days[i].date.getTime()); // clone the date as we will add days
             let month = date.getMonth() + 1;
             let day = date.getDate();
-            if(bottomLabel === ""){
-              bottomLabel += date.toDateString() + " - ";
+            if(firstDay === ""){
+              firstDay += date.toDateString() + " - ";
               date.setDate(day + 6)
-              bottomLabel += date.toDateString();
             }else{
               date.setDate(day + 6)
             }
             let endDay = date.getDate();
             let endMonth = date.getMonth() + 1;
+            finalDay = date.toDateString();
             let dateLabel = month + "/" + day + " - " + endMonth + "/" + endDay;
             // the cleanest way to include a line break was to allowHtml in the table options and have the break character
             let headerList = 'Week ' + weekNumber.toFixed(0) + '<br>' + dateLabel;
@@ -194,17 +196,17 @@ class ChartView extends Component {
       locationIndex++;
     });
 
+    if(bottomLabel === ""){
+      bottomLabel += firstDay + finalDay;
+    }
+
     locationSalesTableHeader.push({ type: 'number', label: 'Total' });
 
     perLocationSalesGraphData.unshift(locationSalesTableHeader);
-
     // Convert table graph data to line graph format
     let companyPerWeekSalesGraphData = [];
-
-
     // i = 1 & j = 1 to discard the unwanted line graph header data
-    //.length -1 to not duplicate the top chart at the end.
-    for (let i = 1; i < perLocationSalesGraphData.length -1 ; i++) {
+    for (let i = 1; i < perLocationSalesGraphData.length; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
       let dataheader = ["x"];
@@ -256,7 +258,6 @@ class ChartView extends Component {
   render() {
     let mainChartSize = "600px";
     let smallChartSize = "w-33 pa0 mr0";
-    console.log(this.state.weeksToGoBack)
     if(this.state.weeksToGoBack > 5){ // 12 weeks
       mainChartSize = "800px";
       smallChartSize = "w-50 pa0 mr0";
