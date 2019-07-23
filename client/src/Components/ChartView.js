@@ -360,3 +360,5 @@ function parseDataTypeName(dataType){
   cleanName = cleanName.join(" "); //  joins them with a space
   return cleanName;
 }
+
+export default ChartView;
