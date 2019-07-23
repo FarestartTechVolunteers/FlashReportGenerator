@@ -94,17 +94,32 @@ public class HTTPGetter {
         return response;
     }
 
+    public static CompletableFuture<Response> getLaborCost(int locationGroupID, String dateOfBusiness) throws IOException {
+        // For Labor Cost
+        String urlVariable = "https://api.ctuit.com/api/KeyInfo/" + locationGroupID + "/" + dateOfBusiness+ "/" + PERIOD_TYPE_ID  + "/4";
+
+        CompletableFuture<Response> response = asyncHttpClient.prepareGet(urlVariable)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-UserAuthToken", AUTH_TOKEN)
+                .addHeader("X-UserId", USER_ID)
+                .execute().toCompletableFuture();
+
+        return response;
+    }
+
     public static DailyData getBusinessLocationData(String name, int locationGroupID, String dateOfBusiness) throws IOException, ExecutionException, InterruptedException {
 
         CompletableFuture<Response> r1 = getNetSalesData(locationGroupID, dateOfBusiness);
         CompletableFuture<Response> r2 = getCheckCount(locationGroupID, dateOfBusiness);
         CompletableFuture<Response> r3 = getGuestCount(locationGroupID, dateOfBusiness);
+        CompletableFuture<Response> r4 = getLaborCost(locationGroupID, dateOfBusiness);
 
-        CompletableFuture.allOf(r1, r2, r3).join();
+        CompletableFuture.allOf(r1, r2, r3, r4).join();
 
         String netSalesDataString = r1.get().getResponseBody();
         String checkCountRes = r2.get().getResponseBody();
         String guestCountRes = r3.get().getResponseBody();
+        String laborCostString = r4.get().getResponseBody();
 
         // Sales
         Double netSales = parseValueFieldName(netSalesDataString, "current");
@@ -119,11 +134,15 @@ public class HTTPGetter {
 
         Double sameDayLastWeekCheckCount = parseSameDayLWData(checkCountRes);
 
-
         // Guest Count
         Double guestCount = parseValueFieldName(guestCountRes, "current");
 
         Double sameDayLastWeekGuestCount = parseSameDayLWData(guestCountRes);
+
+        // Labor cost
+        Double laborCost = parseValueFieldName(laborCostString, "current");
+
+        Double sameDayLastWeeklaborCost = parseSameDayLWData(laborCostString);
 
         long checkCountLong = checkCount.longValue();
         long sameDayLastWeekCheckCountL = sameDayLastWeekCheckCount.longValue();
@@ -142,7 +161,7 @@ public class HTTPGetter {
 //        System.out.println("Getting the real guestCountLong " + guestCountLong);
 //        System.out.println("Getting the real SDLW guestCountLong " + sameDayLastWeekGuestCount);
 
-        return new DailyData(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL);
+        return new DailyData(name, netSales, sameDayLastWeekSales, budgetedSales, checkCountLong, sameDayLastWeekCheckCountL, guestCountLong, sameDayLastWeekGuestCountL, laborCost);
     }
 
 

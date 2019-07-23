@@ -44,13 +44,16 @@ FlashReportGenerator
 
 ---
 
-## Frontend Development 
+## Backend Demo
+```
+http://weeklyreport-env.b9fv3mafzd.us-west-2.elasticbeanstalk.com/
+```
 
-If you are not changing the backend and want to skip the `mvn package` portion, you may use the following  
-steps to quickly edit the frontend:
-1. Start the server (step two of **Execution**)
-2. `cd` into the client directory
-3. run `npm start`
+## API
+
+```
+http://weeklyreport-env.b9fv3mafzd.us-west-2.elasticbeanstalk.com/api/getData?startDate=03-11-2019&range=2
+```
 
 Range gives you # of days since the start Date.
 For now, max you get is 7.
