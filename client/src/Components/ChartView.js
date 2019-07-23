@@ -53,9 +53,7 @@ class ChartView extends Component {
   Param: weeksData, is an array of json objects. The first array should be the main object
   while consecutive elements stored in the array would be the other sales that are to be compared with
   the main sales data.
-
   This method sets the variables of totalCompanySalesByWeek and totalCompanySales
-
   totalCompanySalesByWeek will contain information which will be of the form:
   {
     [["x", "Sales starting from XX/XX/XXXX", "Sales starting from XX/XX/XXXX"], ------> This will function as the legend
@@ -63,9 +61,7 @@ class ChartView extends Component {
     [1, sales1, sales2],        x will have points on 0,1,2
     [2, sales1, sales2]]
    }
-
    totalCompanySales holds the total representation of the main sale's total
-
    For more info for how this works with the <Chart>
    refer to: https://react-google-charts.com/line-chart?fbclid=IwAR3zgNXq8eEnUxwXttmFs3bZO6TzaLne2tZCzXcC5rEqowRc8KcQ4Bmj7Ao
    */
@@ -182,27 +178,6 @@ class ChartView extends Component {
         for(let extraDataType in extraOptions){
           if(extraDataType === dataType || extraOptions[extraDataType] === false || extraDataType === "lastYear"){
             continue;
-
-          }
-        }
-        let locationDaysData = location.days[i];
-        locationTotal += locationDaysData[dataType];
-
-        // insert main data type
-        locationDataRow[weekNumber - 1][dataType].v += locationDaysData[dataType];
-        locationDataRow[weekNumber - 1][dataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
-
-        //insert last year if needed
-        if(extraOptions["lastYear"] === true){
-          let lastYearLocationDaysData = weeksData[1].locations[locationIndex].days[i];
-          locationDataRow[weekNumber - 1]["lastYear"].v += lastYearLocationDaysData[dataType];
-          locationDataRow[weekNumber - 1]["lastYear"].f = this.toDollarString(locationDataRow[weekNumber - 1]["lastYear"].v);
-        }
-
-        //insert extra data types
-        for(let extraDataType in extraOptions){
-          if(extraDataType === dataType || extraOptions[extraDataType] === false || extraDataType === "lastYear"){
-            continue;
           }
           locationDataRow[weekNumber - 1][extraDataType].v += locationDaysData[extraDataType];
           locationDataRow[weekNumber - 1][extraDataType].f = this.toDollarString(locationDataRow[weekNumber - 1][dataType].v);
@@ -227,8 +202,6 @@ class ChartView extends Component {
     // Convert table graph data to line graph format
     let companyPerWeekSalesGraphData = [];
     // i = 1 & j = 1 to discard the unwanted line graph header data
-    //.length -1 to not duplicate the top chart at the end.
-
     for (let i = 1; i < perLocationSalesGraphData.length; i++) {
       let companyName = perLocationSalesGraphData[i][0];
       let graphData = [];
@@ -387,5 +360,3 @@ function parseDataTypeName(dataType){
   cleanName = cleanName.join(" "); //  joins them with a space
   return cleanName;
 }
-
-export default ChartView;
